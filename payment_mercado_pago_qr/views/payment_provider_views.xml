@@ -1,0 +1,23 @@
+<odoo>
+    <record id="view_payment_provider_form_mercado_pago_qr" model="ir.ui.view">
+        <field name="name">payment.provider.form.mercado.pago.qr</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='credentials']" position="inside">
+                <group attrs="{'invisible': [('code', '!=', 'mercado_pago_qr')]}" string="Mercado Pago QR">
+                    <group>
+                        <field name="mp_access_token" password="True"/>
+                        <field name="mp_webhook_secret" password="True"/>
+                    </group>
+                    <group>
+                        <field name="mp_collector_id"/>
+                        <field name="mp_pos_id"/>
+                        <field name="mp_external_pos_id"/>
+                    </group>
+                    <field name="mp_notification_url" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
