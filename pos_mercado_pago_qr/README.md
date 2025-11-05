@@ -5,7 +5,7 @@ Modulo para integrar el Punto de Venta de Odoo con cobros vía QR dinámico de M
 ## Requisitos previos
 
 - Credenciales de una aplicación de Mercado Pago con acceso a la API de QR dinámicos (token de acceso, collector ID, POS externo y opcionalmente Store ID).
-- Odoo 16 con los módulos `point_of_sale` y `pos_online_payment` instalados.
+- Odoo 18 con los módulos `point_of_sale` y `pos_online_payment` instalados.
 - Conexión HTTPS pública para recibir notificaciones (webhooks) desde Mercado Pago.
 
 ## Instalación

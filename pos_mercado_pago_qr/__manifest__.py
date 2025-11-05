@@ -1,7 +1,7 @@
 {
     'name': 'POS Mercado Pago QR',
     'summary': 'Dynamic QR payments with Mercado Pago in the POS',
-    'version': '16.0.1.0.0',
+    'version': '18.0.1.0.0',
     'category': 'Sales/Point of Sale',
     'author': 'Mezztt',
     'website': 'https://www.mercadopago.com.ar',
