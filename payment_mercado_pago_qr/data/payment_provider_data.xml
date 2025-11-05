@@ -1,0 +1,8 @@
+<odoo noupdate="1">
+    <record id="payment_provider_mercado_pago_qr" model="payment.provider">
+        <field name="name">Mercado Pago QR</field>
+        <field name="code">mercado_pago_qr</field>
+        <field name="company_id" eval="False"/>
+        <field name="state">disabled</field>
+    </record>
+</odoo>
