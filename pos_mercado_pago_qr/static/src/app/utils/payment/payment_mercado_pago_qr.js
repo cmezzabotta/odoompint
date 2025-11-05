@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
+import "@pos_mercado_pago_qr/app/services/pos_store_patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MercadoPagoQrPopup } from "@pos_mercado_pago_qr/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup";
 
