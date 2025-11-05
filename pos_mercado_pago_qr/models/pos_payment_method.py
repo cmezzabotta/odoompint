@@ -70,23 +70,40 @@ class PosPaymentMethod(models.Model):
         return fields_list
 
     def write(self, vals):
-        res = super().write(vals)
+        if self.env.context.get('mpqr_skip_sync'):
+            return super().write(vals)
+
+        vals = dict(vals)
         if vals.get('use_payment_terminal') == 'mercado_pago_qr':
-            self.filtered(lambda m: m.use_payment_terminal == 'mercado_pago_qr').write({'mpqr_use_qr': True})
+            vals.setdefault('mpqr_use_qr', True)
+
+        res = super().write(vals)
+
         if 'mpqr_use_qr' in vals or vals.get('use_payment_terminal') == 'mercado_pago_qr':
             for method in self:
                 if method.mpqr_use_qr:
-                    method.use_payment_terminal = 'mercado_pago_qr'
-                    method.payment_method_type = 'terminal'
+                    method.with_context(mpqr_skip_sync=True).write({
+                        'use_payment_terminal': 'mercado_pago_qr',
+                        'payment_method_type': 'terminal',
+                    })
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
-        records = super().create(vals_list)
-        for method, vals in zip(records, vals_list):
+        cleaned_vals = []
+        for vals in vals_list:
+            vals = dict(vals)
+            if vals.get('use_payment_terminal') == 'mercado_pago_qr':
+                vals.setdefault('mpqr_use_qr', True)
+            cleaned_vals.append(vals)
+
+        records = super().create(cleaned_vals)
+        for method, vals in zip(records, cleaned_vals):
             if vals.get('mpqr_use_qr') or vals.get('use_payment_terminal') == 'mercado_pago_qr':
-                method.use_payment_terminal = 'mercado_pago_qr'
-                method.payment_method_type = 'terminal'
+                method.with_context(mpqr_skip_sync=True).write({
+                    'use_payment_terminal': 'mercado_pago_qr',
+                    'payment_method_type': 'terminal',
+                })
         return records
 
     # Mercado Pago API helpers -------------------------------------------------
