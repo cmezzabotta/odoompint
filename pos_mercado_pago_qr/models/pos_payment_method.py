@@ -24,10 +24,8 @@ class PosPaymentMethod(models.Model):
     mpqr_receipt_message = fields.Text(string='Receipt message', help='Optional message added to Mercado Pago order description.')
     mpqr_last_error = fields.Text(string='Last Mercado Pago error', readonly=True)
 
-    payment_terminal = fields.Selection(selection_add=[('mercado_pago_qr', 'Mercado Pago QR')])
-
     def _get_payment_terminal_selection(self):
-        selection = super()._get_payment_terminal_selection()
+        selection = list(super()._get_payment_terminal_selection())
         if ('mercado_pago_qr', 'Mercado Pago QR') not in selection:
             selection.append(('mercado_pago_qr', 'Mercado Pago QR'))
         return selection
