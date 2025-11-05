@@ -7,16 +7,16 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='use_payment_terminal']" position="after">
                 <field name="mpqr_use_qr" invisible="use_payment_terminal != 'mercado_pago_qr'"/>
-                <group attrs="{'invisible': [('use_payment_terminal', '!=', 'mercado_pago_qr')]}">
-                    <field name="mpqr_access_token" placeholder="APP_USR-..." required="1"/>
-                    <field name="mpqr_collector_id" placeholder="123456789" required="1"/>
-                    <field name="mpqr_pos_external_id" placeholder="POS_0001" required="1"/>
+                <group invisible="use_payment_terminal != 'mercado_pago_qr'">
+                    <field name="mpqr_access_token" placeholder="APP_USR-..." required="use_payment_terminal == 'mercado_pago_qr'"/>
+                    <field name="mpqr_collector_id" placeholder="123456789" required="use_payment_terminal == 'mercado_pago_qr'"/>
+                    <field name="mpqr_pos_external_id" placeholder="POS_0001" required="use_payment_terminal == 'mercado_pago_qr'"/>
                     <field name="mpqr_store_id"/>
                     <field name="mpqr_order_validity"/>
                     <field name="mpqr_receipt_message" widget="text"/>
                     <field name="mpqr_notification_secret"/>
-                    <field name="mpqr_notification_url" readonly="1"/>
-                    <field name="mpqr_last_error" readonly="1" widget="text"/>
+                    <field name="mpqr_notification_url" readonly="True"/>
+                    <field name="mpqr_last_error" readonly="True" widget="text"/>
                 </group>
             </xpath>
         </field>
