@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <rect width="1024" height="1024" fill="#000"/>
-  <g fill="#fff" transform="translate(180 160)">
-    <rect x="0" y="0" width="180" height="520" rx="70"/>
-    <path d="M260 0h140l-160 520h-140z"/>
-    <path d="M470 90h200v180l-120 140 120 120v90h-200v-160l80-90-80-90z"/>
-  </g>
-  <text x="512" y="860" font-family="'DejaVu Sans', sans-serif" font-size="150" fill="#fff" text-anchor="middle" font-weight="bold">MEZZTT</text>
-</svg>
