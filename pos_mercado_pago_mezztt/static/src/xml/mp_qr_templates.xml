@@ -1,0 +1,14 @@
+<templates xml:space="preserve">
+  <t t-name="pos_mercado_pago_mezztt.MpQrPopup" owl="1">
+    <div class="popup popup-lg">
+      <div class="popup-title"><t t-esc="props.title"/></div>
+      <div class="popup-content">
+        <t t-if="props.qr_base64"><img t-att-src="'data:image/png;base64,'+props.qr_base64" width="260" height="260"/></t>
+        <t t-elif="props.qr_url"><img t-att-src="props.qr_url" width="260" height="260"/></t>
+        <t t-else=""><div>No se pudo generar el QR</div></t>
+        <div><t t-esc="state.message"/> — <t t-esc="state.seconds"/>s</div>
+      </div>
+      <div class="footer"><button class="button cancel" t-on-click="cancel">Cancelar</button></div>
+    </div>
+  </t>
+</templates>
