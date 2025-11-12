@@ -5,7 +5,8 @@
         <field name="payment_terminal">mercado_pago_qr_mezztt</field>
         <field name="type">qr_code</field>
         <field name="is_cash_count">False</field>
-        <field name="journal_id" ref="point_of_sale.pos_bank_journal"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="journal_id" eval="env['account.journal'].search([('company_id', '=', ref('base.main_company')), ('type', 'in', ['bank', 'cash'])], limit=1).id"/>
         <field name="receivable_account_id" ref="account.data_account_receivable"/>
     </record>
 </odoo>
