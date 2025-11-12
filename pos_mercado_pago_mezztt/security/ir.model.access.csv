@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-pos_mezztt_settings_user,mezztt settings,base.model_res_config_settings,base.group_system,1,1,1,1
-pos_mezztt_payment_user,mezztt mp payment,model_pos_mercado_pago_mezztt_payment,base.group_user,1,1,1,0
