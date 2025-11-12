@@ -4,7 +4,9 @@
     "version": "16.0.0.1",
     "author": "mezztt",
     "depends": ["point_of_sale", "payment"],
-    "data": [],
+    "data": [
+        "data/pos_payment_method_data.xml",
+    ],
     "assets": {
         "point_of_sale.assets": [
             "pos_mercado_pago_mezztt_base/static/src/app/terminals/mercadopago_qr.js",
