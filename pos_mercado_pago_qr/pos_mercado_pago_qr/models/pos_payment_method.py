@@ -22,7 +22,14 @@ class PosPaymentMethod(models.Model):
     mpqr_notification_url = fields.Char(string='Webhook URL', compute='_compute_mpqr_notification_url', readonly=True)
     mpqr_order_validity = fields.Integer(string='QR validity (minutes)', default=10, help='Expiration time that will be sent when creating the QR order.')
     mpqr_receipt_message = fields.Text(string='Receipt message', help='Optional message added to Mercado Pago order description.')
-    mpqr_integrator_id = fields.Char(string='Integrator ID', help='Identifier provided by Mercado Pago for partners/integrators.', groups='point_of_sale.group_pos_manager')
+    mpqr_integrator_id = fields.Char(
+        string='Integrator ID',
+        help='Identifier provided by Mercado Pago for partners/integrators.',
+        groups='point_of_sale.group_pos_manager',
+        compute='_compute_mpqr_integrator_id',
+        inverse='_inverse_mpqr_integrator_id',
+        store=False,
+    )
     mpqr_last_error = fields.Text(string='Last Mercado Pago error', readonly=True)
 
     def _get_payment_terminal_selection(self):
@@ -108,6 +115,13 @@ class PosPaymentMethod(models.Model):
                 })
         return records
 
+    def unlink(self):
+        params = self.env['ir.config_parameter'].sudo()
+        for method in self:
+            if method.id:
+                params.search([('key', '=', method._mpqr_integrator_param_key())]).unlink()
+        return super().unlink()
+
     # Mercado Pago API helpers -------------------------------------------------
 
     def _ensure_mpqr_ready(self):
@@ -118,6 +132,29 @@ class PosPaymentMethod(models.Model):
             if not getattr(self, field_name):
                 raise UserError(_('Field %s is required to create Mercado Pago QR orders.') % field_name)
         return MercadoPagoQrClient(self.sudo().mpqr_access_token)
+
+    def _mpqr_integrator_param_key(self):
+        self.ensure_one()
+        return f'pos_mercado_pago_qr.integrator_id.{self.id}'
+
+    def _compute_mpqr_integrator_id(self):
+        params = self.env['ir.config_parameter'].sudo()
+        for method in self:
+            if method.id:
+                method.mpqr_integrator_id = params.get_param(method._mpqr_integrator_param_key()) or False
+            else:
+                method.mpqr_integrator_id = False
+
+    def _inverse_mpqr_integrator_id(self):
+        params = self.env['ir.config_parameter'].sudo()
+        for method in self:
+            if not method.id:
+                continue
+            key = method._mpqr_integrator_param_key()
+            if method.mpqr_integrator_id:
+                params.set_param(key, method.mpqr_integrator_id)
+            else:
+                params.search([('key', '=', key)]).unlink()
 
     def mpqr_prepare_payload(self, order_vals):
         self.ensure_one()
