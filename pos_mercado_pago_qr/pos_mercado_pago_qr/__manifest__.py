@@ -14,6 +14,11 @@
     'assets': {
         'point_of_sale.assets': [
             'pos_mercado_pago_qr/static/src/js/mp_qr_terminal.js',
+            'pos_mercado_pago_qr/static/src/app/services/pos_store_patch.js',
+            'pos_mercado_pago_qr/static/src/app/utils/payment/payment_mercado_pago_qr.js',
+            'pos_mercado_pago_qr/static/src/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup.js',
+            'pos_mercado_pago_qr/static/src/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup.xml',
+            'pos_mercado_pago_qr/static/src/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup.scss',
         ],
     },
     'images': ['static/description/icon.svg'],
