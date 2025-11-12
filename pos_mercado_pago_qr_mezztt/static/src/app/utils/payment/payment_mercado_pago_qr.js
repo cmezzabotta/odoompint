@@ -1,9 +1,9 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { register_payment_method } from "@point_of_sale/app/services/pos_store";
-import "@pos_mercado_pago_qr/app/services/pos_store_patch";
+import "@pos_mercado_pago_qr_mezztt/app/services/pos_store_patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { MercadoPagoQrPopup } from "@pos_mercado_pago_qr/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup";
+import { MercadoPagoQrPopup } from "@pos_mercado_pago_qr_mezztt/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup";
 
 export class PaymentMercadoPagoQR extends PaymentInterface {
     setup() {
@@ -12,23 +12,48 @@ export class PaymentMercadoPagoQR extends PaymentInterface {
         this.popupCloser = null;
     }
 
-    async sendPaymentRequest() {
-        await super.sendPaymentRequest(...arguments);
-        const order = this.pos.getOrder();
-        const paymentLine = order?.getSelectedPaymentline();
-        if (!order || !paymentLine) {
+    // ---------------------------------------------------------------------
+    // Legacy PaymentTerminal compatibility
+    // ---------------------------------------------------------------------
+
+    async send_payment_request(...args) {
+        return this.sendPaymentRequest(...args);
+    }
+
+    async send_payment_cancel(...args) {
+        return this.sendPaymentCancel(...args);
+    }
+
+    async send_payment_reversal(...args) {
+        return this.sendPaymentReversal(...args);
+    }
+
+    async sendPaymentRequest(order = this.pos.getOrder(), cid) {
+        await super.sendPaymentRequest(order, cid);
+        const activeOrder = order || this.pos.getOrder();
+        let paymentLine = activeOrder?.getSelectedPaymentline?.();
+        if (cid && activeOrder?.paymentlines?.models) {
+            const found = activeOrder.paymentlines.models.find((line) => line.cid === cid);
+            if (found) {
+                if (typeof activeOrder.select_paymentline === "function") {
+                    activeOrder.select_paymentline(found);
+                }
+                paymentLine = found;
+            }
+        }
+        if (!activeOrder || !paymentLine) {
             return false;
         }
 
         try {
             paymentLine.setPaymentStatus("waitingCard");
-            const partner = order.getPartner();
+            const partner = activeOrder.getPartner ? activeOrder.getPartner() : null;
             const orderData = {
-                reference: order.name || order.uid,
+                reference: activeOrder.name || activeOrder.uid,
                 amount: Math.abs(paymentLine.amount),
                 currency: this.pos.currency?.name,
-                title: order.name || _t("POS Order"),
-                description: (_t("Payment for %s") % (order.name || order.uid)),
+                title: activeOrder.name || _t("POS Order"),
+                description: (_t("Payment for %s") % (activeOrder.name || activeOrder.uid)),
                 customer: partner
                     ? {
                           name: partner.name,
@@ -105,6 +130,7 @@ export class PaymentMercadoPagoQR extends PaymentInterface {
             }
 
             paymentLine.setPaymentStatus("done");
+            this._showMessage(_t("Recibimos tu pago"), _t("Confirmación"));
             this.currentOrder = null;
             return true;
         } catch (error) {

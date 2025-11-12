@@ -1,4 +1,4 @@
-<t t-name="pos_mercado_pago_qr.MercadoPagoQrPopup" owl="1">
+<t t-name="pos_mercado_pago_qr_mezztt.MercadoPagoQrPopup" owl="1">
     <Dialog size="md" t-props="props">
         <t t-set-slot="title">
             <span class="o_mpqr_title">Mercado Pago • <t t-esc="props.orderName"/></span>

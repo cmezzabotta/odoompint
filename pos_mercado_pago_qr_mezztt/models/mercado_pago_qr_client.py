@@ -14,8 +14,21 @@ REQUEST_TIMEOUT = 15
 class MercadoPagoQrClient:
     """Thin wrapper around Mercado Pago's QR order endpoints."""
 
-    def __init__(self, access_token: str):
-        self.access_token = access_token
+    def __init__(self, payment_method):
+        """Store the payment method to read credentials from it on each call."""
+        self.payment_method = payment_method
+
+    @property
+    def access_token(self) -> str:
+        return self.payment_method.mpqr_access_token
+
+    @property
+    def collector_id(self) -> str:
+        return self.payment_method.mpqr_collector_id
+
+    @property
+    def external_pos_id(self) -> str:
+        return self.payment_method.mpqr_pos_external_id
 
     def _request(self, method: str, endpoint: str, payload: Dict[str, Any] | None = None, params: Dict[str, Any] | None = None):
         url = f"{MERCADO_PAGO_API_ENDPOINT}{endpoint}"
@@ -46,14 +59,17 @@ class MercadoPagoQrClient:
             _logger.exception("Unable to decode Mercado Pago QR response: %s", error)
             return {'error': str(error)}
 
-    def create_order(self, collector_id: str, external_pos_id: str, payload: Dict[str, Any]):
-        endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+    def _orders_endpoint(self) -> str:
+        return f"/instore/qr/seller/collectors/{self.collector_id}/pos/{self.external_pos_id}/orders"
+
+    def create_order(self, payload: Dict[str, Any]):
+        endpoint = self._orders_endpoint()
         return self._request('POST', endpoint, payload)
 
-    def get_order(self, collector_id: str, external_pos_id: str):
-        endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+    def get_order(self):
+        endpoint = self._orders_endpoint()
         return self._request('GET', endpoint)
 
-    def cancel_order(self, collector_id: str, external_pos_id: str):
-        endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+    def cancel_order(self):
+        endpoint = self._orders_endpoint()
         return self._request('DELETE', endpoint)

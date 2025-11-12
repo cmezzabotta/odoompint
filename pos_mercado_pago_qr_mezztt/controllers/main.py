@@ -59,38 +59,3 @@ class MercadoPagoQrWebhook(http.Controller):
             'status': order.status,
         })
 
-
-    @http.route('/pos_mercado_pago_qr/create_qr', type='json', auth='user', methods=['POST'])
-    def create_qr(self, order_uid, amount, **kwargs):
-        """
-        Endpoint usado desde el POS para generar el QR dinámico.
-        """
-        PosOrder = request.env['pos.order'].sudo()
-        order = PosOrder.search([('uid', '=', order_uid)], limit=1)
-
-        if not order:
-            return {'error': 'Order not found'}
-
-        payment_method = order.session_id.config_id.mercado_pago_qr_method_id
-        if not payment_method:
-            return {'error': 'No Mercado Pago QR method configured'}
-
-        client = payment_method.get_mpqr_client()
-        external_reference = f"POS-{order.uid}"
-        qr_data = client.create_qr(
-            external_reference=external_reference,
-            amount=amount,
-            collector_id=payment_method.mpqr_collector_id,
-            pos_id=payment_method.mpqr_external_pos_id,
-            store_id=payment_method.mpqr_store_id or None,
-            message=payment_method.mpqr_receipt_message or '',
-            expiration_minutes=payment_method.mpqr_expiration_minutes or 10,
-        )
-
-        request.env['pos.mercadopago.qr.order'].sudo().create({
-            'external_reference': external_reference,
-            'payment_method_id': payment_method.id,
-            'pos_order_id': order.id,
-        })
-
-        return {'qr_url': qr_data.get('qr_data')}

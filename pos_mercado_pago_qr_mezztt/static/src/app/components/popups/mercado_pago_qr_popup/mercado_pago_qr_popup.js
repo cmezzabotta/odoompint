@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 const POLLING_DELAY = 4000;
 
 export class MercadoPagoQrPopup extends Component {
-    static template = "pos_mercado_pago_qr.MercadoPagoQrPopup";
+    static template = "pos_mercado_pago_qr_mezztt.MercadoPagoQrPopup";
     static components = { Dialog };
     static props = {
         orderName: { type: String },
