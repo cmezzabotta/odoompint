@@ -12,6 +12,7 @@
                     <field name="mpqr_collector_id" placeholder="123456789" required="1"/>
                     <field name="mpqr_pos_external_id" placeholder="POS_0001" required="1"/>
                     <field name="mpqr_store_id"/>
+                    <field name="mpqr_integrator_id"/>
                     <field name="mpqr_order_validity"/>
                     <field name="mpqr_receipt_message" widget="text"/>
                     <field name="mpqr_notification_secret"/>
