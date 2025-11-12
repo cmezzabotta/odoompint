@@ -5,9 +5,12 @@ import { PaymentTerminal } from "point_of_sale.models";
 const MercadoPagoQR = {
     name: "mercado_pago_qr",
 
-    async send_payment_request(payment_line_uuid) {
+    async send_payment_request(request) {
+        const paymentLineUuid = typeof request === "string" ? request : request?.paymentLineUuid;
         const order = this.env.pos.get_order();
-        const payment_line = order.paymentlines.find(pl => pl.uuid === payment_line_uuid);
+        const payment_line = paymentLineUuid
+            ? order.paymentlines.find((pl) => pl.uuid === paymentLineUuid)
+            : order.getSelectedPaymentline?.();
         if (!payment_line) {
             throw new Error("No se encontró la línea de pago.");
         }

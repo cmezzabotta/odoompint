@@ -46,14 +46,37 @@ class MercadoPagoQrClient:
             _logger.exception("Unable to decode Mercado Pago QR response: %s", error)
             return {'error': str(error)}
 
-    def create_order(self, collector_id: str, external_pos_id: str, payload: Dict[str, Any]):
-        endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+    def create_order(self, payload: Dict[str, Any], collector_id: str | None = None, external_pos_id: str | None = None):
+        if collector_id and external_pos_id:
+            endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+        else:
+            endpoint = "/v1/orders"
         return self._request('POST', endpoint, payload)
 
-    def get_order(self, collector_id: str, external_pos_id: str):
-        endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+    def get_order(
+        self,
+        order_id: str | None = None,
+        collector_id: str | None = None,
+        external_pos_id: str | None = None,
+    ):
+        if order_id:
+            endpoint = f"/v1/orders/{order_id}"
+        elif collector_id and external_pos_id:
+            endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+        else:
+            raise ValueError("An order identifier or collector/POS identifiers must be provided to poll Mercado Pago.")
         return self._request('GET', endpoint)
 
-    def cancel_order(self, collector_id: str, external_pos_id: str):
-        endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
-        return self._request('DELETE', endpoint)
+    def cancel_order(
+        self,
+        order_id: str | None = None,
+        collector_id: str | None = None,
+        external_pos_id: str | None = None,
+    ):
+        if order_id:
+            endpoint = f"/v1/orders/{order_id}"
+            return self._request('DELETE', endpoint)
+        if collector_id and external_pos_id:
+            endpoint = f"/instore/qr/seller/collectors/{collector_id}/pos/{external_pos_id}/orders"
+            return self._request('DELETE', endpoint)
+        raise ValueError("An order identifier or collector/POS identifiers must be provided to cancel Mercado Pago orders.")

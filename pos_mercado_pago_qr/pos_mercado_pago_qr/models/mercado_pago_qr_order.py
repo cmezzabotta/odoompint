@@ -40,20 +40,21 @@ class PosMercadoPagoQrOrder(models.Model):
         self = self.sudo()
         external_reference = payload.get('external_reference') or ''
         order_reference = external_reference.split('::')[0] if external_reference else payload.get('description')
+        response_qr = response.get('qr') if isinstance(response.get('qr'), dict) else {}
         order = self.create({
             'name': payload.get('description') or payload.get('title') or external_reference,
             'payment_method_id': payment_method.id,
             'pos_session_id': payment_method.pos_config_ids[:1].current_session_id.id if payment_method.pos_config_ids else False,
             'order_reference': order_reference or external_reference,
             'external_reference': external_reference,
-            'mercadopago_order_id': response.get('in_store_order_id'),
+            'mercadopago_order_id': response.get('id') or response.get('in_store_order_id'),
             'mercadopago_pos_id': payload.get('pos_id') or payment_method.mpqr_pos_external_id,
             'collector_id': payment_method.mpqr_collector_id,
             'amount': payload['total_amount'],
             'currency_id': payment_method.currency_id.id or payment_method.company_id.currency_id.id,
-            'qr_data': response.get('qr_data'),
-            'qr_image': response.get('qr_image'),
-            'expires_at': response.get('expiration_date'),
+            'qr_data': response.get('qr_data') or response_qr.get('data') or response_qr.get('qr_data'),
+            'qr_image': response.get('qr_image') or response_qr.get('image'),
+            'expires_at': response.get('expiration_date') or response_qr.get('expiration_date'),
             'payload': json.dumps(payload, ensure_ascii=False),
             'last_response': json.dumps(response, ensure_ascii=False),
         })
