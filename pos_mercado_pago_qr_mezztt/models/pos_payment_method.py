@@ -60,6 +60,8 @@ class PosPaymentMethod(models.Model):
     def _load_pos_data_fields(self, config):
         fields_list = super()._load_pos_data_fields(config)
         fields_list += [
+            'use_payment_terminal',
+            'payment_method_type',
             'mpqr_use_qr',
             'mpqr_collector_id',
             'mpqr_pos_external_id',

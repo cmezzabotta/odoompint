@@ -13,7 +13,6 @@
     ],
     'assets': {
         'point_of_sale.assets': [
-            'pos_mercado_pago_qr_mezztt/static/src/js/mp_qr_terminal.js',
             'pos_mercado_pago_qr_mezztt/static/src/app/services/pos_store_patch.js',
             'pos_mercado_pago_qr_mezztt/static/src/app/utils/payment/payment_mercado_pago_qr.js',
             'pos_mercado_pago_qr_mezztt/static/src/app/components/popups/mercado_pago_qr_popup/mercado_pago_qr_popup.js',

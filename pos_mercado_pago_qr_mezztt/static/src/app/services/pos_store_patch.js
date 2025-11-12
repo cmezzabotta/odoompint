@@ -1,88 +1,99 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 
-function attachTerminal(posStore, paymentMethod, PaymentInterface) {
-    if (!paymentMethod || paymentMethod.use_payment_terminal !== "mercado_pago_qr") {
-        return;
-    }
-    if (!PaymentInterface) {
-        return;
-    }
+function collectPaymentMethods(posStore) {
+    const buckets = [
+        posStore.models?.["pos.payment.method"],
+        posStore.payment_methods,
+        posStore.paymentMethods,
+        posStore.db?.payment_methods,
+    ];
 
-    const existingTerminal = paymentMethod.payment_terminal;
-    if (existingTerminal instanceof PaymentInterface) {
-        // Ensure the legacy API is available on the modern interface instance.
-        ensureLegacyAliases(existingTerminal);
-        return;
-    }
-
-    const terminal = new PaymentInterface(posStore, paymentMethod);
-    ensureLegacyAliases(terminal);
-    paymentMethod.payment_terminal = terminal;
-}
-
-function ensureLegacyAliases(terminal) {
-    if (typeof terminal.send_payment_request !== "function" && typeof terminal.sendPaymentRequest === "function") {
-        terminal.send_payment_request = (...args) => terminal.sendPaymentRequest(...args);
-    }
-    if (typeof terminal.send_payment_cancel !== "function" && typeof terminal.sendPaymentCancel === "function") {
-        terminal.send_payment_cancel = (...args) => terminal.sendPaymentCancel(...args);
-    }
-    if (typeof terminal.send_payment_reversal !== "function" && typeof terminal.sendPaymentReversal === "function") {
-        terminal.send_payment_reversal = (...args) => terminal.sendPaymentReversal(...args);
-    }
-}
-
-function gatherPaymentMethods(posStore) {
-    const methods = new Set();
-
-    const model = posStore.models?.["pos.payment.method"];
-    if (model) {
-        if (typeof model.getAll === "function") {
-            for (const record of model.getAll()) {
-                methods.add(record);
+    const results = new Set();
+    for (const bucket of buckets) {
+        if (!bucket) {
+            continue;
+        }
+        if (typeof bucket.getAll === "function") {
+            for (const method of bucket.getAll()) {
+                results.add(method);
             }
-        } else if (Array.isArray(model.records)) {
-            for (const record of model.records) {
-                methods.add(record);
+            continue;
+        }
+        if (typeof bucket.values === "function") {
+            for (const method of bucket.values()) {
+                results.add(method);
+            }
+            continue;
+        }
+        if (Array.isArray(bucket)) {
+            for (const method of bucket) {
+                results.add(method);
+            }
+            continue;
+        }
+        if (typeof bucket === "object") {
+            for (const method of Object.values(bucket)) {
+                results.add(method);
             }
         }
     }
-
-    const collection = posStore.payment_methods || posStore.paymentMethods;
-    if (collection) {
-        if (typeof collection.values === "function") {
-            for (const record of collection.values()) {
-                methods.add(record);
-            }
-        } else if (Array.isArray(collection)) {
-            for (const record of collection) {
-                methods.add(record);
-            }
-        }
-    }
-
-    return [...methods];
+    return [...results].filter(Boolean);
 }
 
-function assignMercadoPagoQrInterface(posStore) {
+function methodUsesMercadoPago(method) {
+    if (!method) {
+        return false;
+    }
+    return (
+        method.use_payment_terminal === "mercado_pago_qr" ||
+        method.payment_terminal_id === "mercado_pago_qr" ||
+        method.mpqr_use_qr === true ||
+        method.mpqr_use_qr === 1
+    );
+}
+
+function ensureTerminal(posStore, method, PaymentInterface) {
+    if (!methodUsesMercadoPago(method) || !PaymentInterface) {
+        return;
+    }
+
+    if (method.use_payment_terminal !== "mercado_pago_qr") {
+        method.use_payment_terminal = "mercado_pago_qr";
+    }
+
+    const existing = method.payment_terminal;
+    if (existing instanceof PaymentInterface) {
+        return;
+    }
+
+    const terminal = new PaymentInterface(posStore, method);
+    method.payment_terminal = terminal;
+}
+
+function assignMercadoPagoInterfaces(posStore) {
     const PaymentInterface = posStore.electronic_payment_interfaces?.mercado_pago_qr;
     if (!PaymentInterface) {
         return;
     }
-    for (const method of gatherPaymentMethods(posStore)) {
-        attachTerminal(posStore, method, PaymentInterface);
+    for (const method of collectPaymentMethods(posStore)) {
+        ensureTerminal(posStore, method, PaymentInterface);
     }
 }
 
 patch(PosStore.prototype, {
     async setup() {
         await super.setup(...arguments);
-        assignMercadoPagoQrInterface(this);
+        assignMercadoPagoInterfaces(this);
     },
 
     async processServerData() {
         await super.processServerData(...arguments);
-        assignMercadoPagoQrInterface(this);
+        assignMercadoPagoInterfaces(this);
+    },
+
+    async load_server_data() {
+        await super.load_server_data(...arguments);
+        assignMercadoPagoInterfaces(this);
     },
 });
