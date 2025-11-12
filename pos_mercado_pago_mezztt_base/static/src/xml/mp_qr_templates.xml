@@ -1,5 +1,34 @@
 <templates xml:space="preserve">
   <t t-name="pos_mercado_pago_mezztt_base.MpQrPopup" owl="1">
-    <div>Mercado Pago QR popup base</div>
+    <div class="mp-qr-popup">
+      <div class="mp-qr-popup__amount" t-if="props.amount">
+        <span class="label">Monto</span>
+        <span class="value">
+          <t t-esc="props.currency"/>
+          <t t-esc="props.amount.toFixed(2)"/>
+        </span>
+      </div>
+      <div class="mp-qr-popup__qr" t-if="props.qrImage">
+        <img t-att-src="'data:image/png;base64,' + props.qrImage" alt="Mercado Pago QR"/>
+      </div>
+      <div class="mp-qr-popup__qr" t-elif="props.qrData">
+        <p class="mp-qr-popup__qr-data" t-esc="props.qrData"/>
+      </div>
+      <div class="mp-qr-popup__info">
+        <p>
+          Escanea el código con la app de Mercado Pago o cámara compatible. El QR es
+          válido únicamente para esta orden.
+        </p>
+        <t t-if="props.terminal_id">
+          <p class="terminal">Terminal: <t t-esc="props.terminal_id"/></p>
+        </t>
+        <t t-if="props.external_reference">
+          <p class="reference">Referencia: <t t-esc="props.external_reference"/></p>
+        </t>
+      </div>
+      <t t-if="props.body">
+        <div class="mp-qr-popup__extra" t-esc="props.body"/>
+      </t>
+    </div>
   </t>
 </templates>

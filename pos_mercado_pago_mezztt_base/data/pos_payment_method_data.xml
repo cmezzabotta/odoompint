@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+    <record id="pos_payment_method_mercado_pago_qr_mezztt" model="pos.payment.method">
+        <field name="name">Mercado Pago QR (_mezztt)</field>
+        <field name="use_payment_terminal">True</field>
+        <field name="payment_terminal">mercado_pago_qr_mezztt</field>
+        <field name="type">qr_code</field>
+        <field name="is_cash_count">False</field>
+        <field name="journal_id" ref="point_of_sale.pos_bank_journal"/>
+        <field name="receivable_account_id" ref="account.data_account_receivable"/>
+    </record>
+</odoo>
