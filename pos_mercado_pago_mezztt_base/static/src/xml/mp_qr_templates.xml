@@ -1,0 +1,5 @@
+<templates xml:space="preserve">
+  <t t-name="pos_mercado_pago_mezztt_base.MpQrPopup" owl="1">
+    <div>Mercado Pago QR popup base</div>
+  </t>
+</templates>
