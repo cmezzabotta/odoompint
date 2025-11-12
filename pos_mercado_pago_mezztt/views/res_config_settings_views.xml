@@ -11,6 +11,9 @@
             <field name="mp_access_token" password="True"/>
             <field name="mp_public_key"/>
             <field name="mp_sandbox"/>
+            <field name="mp_collector_id"/>
+            <field name="mp_pos_id"/>
+            <field name="mp_store_id"/>
             <label string="Configura las credenciales de Mercado Pago. Todas las llamadas a MP se hacen server-side."/>
           </group>
         </div>
