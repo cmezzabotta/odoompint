@@ -115,7 +115,7 @@ class PosPaymentMethod(models.Model):
         for field_name in ('mpqr_access_token', 'mpqr_collector_id', 'mpqr_pos_external_id'):
             if not getattr(self, field_name):
                 raise UserError(_('Field %s is required to create Mercado Pago QR orders.') % field_name)
-        return MercadoPagoQrClient(self.sudo().mpqr_access_token)
+        return MercadoPagoQrClient(self.sudo())
 
     def mpqr_prepare_payload(self, order_vals):
         self.ensure_one()
@@ -164,7 +164,7 @@ class PosPaymentMethod(models.Model):
         payment_method = self.sudo()
         client = payment_method._ensure_mpqr_ready()
         payload = payment_method.mpqr_prepare_payload(order_vals)
-        response = client.create_order(payment_method.mpqr_collector_id, payment_method.mpqr_pos_external_id, payload)
+        response = client.create_order(payload)
         if response.get('error'):
             payment_method.write({'mpqr_last_error': json.dumps(response, ensure_ascii=False)})
             raise UserError(_('Mercado Pago returned an error when creating the QR order: %s') % response.get('error'))
@@ -189,7 +189,7 @@ class PosPaymentMethod(models.Model):
             raise UserError(_('The POS order does not belong to this payment method.'))
         payment_method = order.payment_method_id
         client = payment_method._ensure_mpqr_ready()
-        response = client.get_order(payment_method.mpqr_collector_id, payment_method.mpqr_pos_external_id)
+        response = client.get_order()
         if response.get('error'):
             order.write({'status': 'error', 'last_response': json.dumps(response, ensure_ascii=False)})
             return {'status': 'error', 'detail': response.get('error')}
@@ -214,7 +214,7 @@ class PosPaymentMethod(models.Model):
             return False
         payment_method = order.payment_method_id
         client = payment_method._ensure_mpqr_ready()
-        response = client.cancel_order(payment_method.mpqr_collector_id, payment_method.mpqr_pos_external_id)
+        response = client.cancel_order()
         order.write({'status': 'cancelled', 'last_response': json.dumps(response, ensure_ascii=False)})
         return True
 

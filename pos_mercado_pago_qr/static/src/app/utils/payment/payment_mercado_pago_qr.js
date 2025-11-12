@@ -12,6 +12,22 @@ export class PaymentMercadoPagoQR extends PaymentInterface {
         this.popupCloser = null;
     }
 
+    // ---------------------------------------------------------------------
+    // Legacy PaymentTerminal compatibility
+    // ---------------------------------------------------------------------
+
+    async send_payment_request(...args) {
+        return this.sendPaymentRequest(...args);
+    }
+
+    async send_payment_cancel(...args) {
+        return this.sendPaymentCancel(...args);
+    }
+
+    async send_payment_reversal(...args) {
+        return this.sendPaymentReversal(...args);
+    }
+
     async sendPaymentRequest() {
         await super.sendPaymentRequest(...arguments);
         const order = this.pos.getOrder();
