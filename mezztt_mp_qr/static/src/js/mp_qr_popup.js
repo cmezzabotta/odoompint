@@ -1,4 +1,4 @@
-odoo.define('mezztt.MercadoPagoQrPopup', function (require) {
+odoo.define('mezztt_mp_qr.MercadoPagoQrPopup', function (require) {
     'use strict';
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
@@ -46,7 +46,7 @@ odoo.define('mezztt.MercadoPagoQrPopup', function (require) {
             try {
                 const result = await this.rpc({
                     model: 'pos.order',
-                    method: 'action_mezztt_create_qr',
+                    method: 'action_mezztt_mp_create_qr',
                     args: [[], this.props.backendPayload],
                 });
                 if (result && result.qr_data) {
@@ -57,7 +57,7 @@ odoo.define('mezztt.MercadoPagoQrPopup', function (require) {
                         this.props.onPaymentCreated(result);
                     }
                     if (result.external_reference) {
-                        this._pollPayment(result.external_reference);
+                        this._pollPayment(result.external_reference, result.payment_method_id);
                     }
                 } else {
                     throw new Error((result && result.error) || this.env._t('No se pudo generar el QR.'));
@@ -78,13 +78,13 @@ odoo.define('mezztt.MercadoPagoQrPopup', function (require) {
             }
         }
 
-        async _pollPayment(externalReference) {
+        async _pollPayment(externalReference, paymentMethodId) {
             const self = this;
             try {
                 const result = await this.rpc({
                     model: 'pos.order',
-                    method: 'action_mezztt_check_payment',
-                    args: [[], externalReference],
+                    method: 'action_mezztt_mp_check_payment',
+                    args: [[], externalReference, paymentMethodId || this.props.paymentMethodId],
                 });
                 const status = result && (result.status || result.order_status || result['status_detail']);
                 if (status && ['paid', 'approved', 'closed'].includes(status)) {
@@ -107,12 +107,12 @@ odoo.define('mezztt.MercadoPagoQrPopup', function (require) {
                 console.warn('Mercado Pago polling error', error);
             }
             this._pollHandle = setTimeout(function () {
-                self._pollPayment(externalReference);
+                self._pollPayment(externalReference, paymentMethodId);
             }, 4000);
         }
     }
 
-    MercadoPagoQrPopup.template = 'mezztt.MercadoPagoQrPopup';
+    MercadoPagoQrPopup.template = 'mezztt_mp_qr.MercadoPagoQrPopup';
     MercadoPagoQrPopup.defaultProps = {
         confirmText: 'Cerrar',
         cancelText: 'Cancelar',

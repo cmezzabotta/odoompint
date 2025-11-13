@@ -10,8 +10,11 @@ class PosOrder(models.Model):
     _inherit = 'pos.order'
 
     @api.model
-    def action_mezztt_create_qr(self, payload):
-        client = self.env['mezztt.mercadopago.client'].sudo()
+    def action_mezztt_mp_create_qr(self, payload):
+        payment_method_id = payload.get('payment_method_id')
+        client = self.env['mezztt_mp_qr.mercadopago_client'].with_context(
+            payment_method_id=payment_method_id
+        ).sudo()
         order_uid = payload.get('order_uid')
         items = payload.get('items', [])
         amount = payload.get('amount')
@@ -37,7 +40,7 @@ class PosOrder(models.Model):
             'title': 'Orden POS %s' % (order_uid,),
             'description': 'Compra realizada desde Odoo POS',
         }
-        _logger.info('Creando QR Mercado Pago para orden POS %s', order_uid)
+        _logger.info('Creando QR Mercado Pago para orden POS %s (método pago %s)', order_uid, payment_method_id)
         response = client.create_dynamic_qr(order_data)
         qr_data = response.get('qr_data') if isinstance(response, dict) else None
         qr_image = None
@@ -48,9 +51,19 @@ class PosOrder(models.Model):
             'qr_image': qr_image,
             'external_reference': response.get('external_reference') if isinstance(response, dict) else order_uid,
             'message': response.get('message') if isinstance(response, dict) else '',
+            'payment_method_id': payment_method_id,
         }
 
     @api.model
-    def action_mezztt_check_payment(self, external_reference):
-        client = self.env['mezztt.mercadopago.client'].sudo()
+    def action_mezztt_mp_check_payment(self, external_reference, payment_method_id=None):
+        client = self.env['mezztt_mp_qr.mercadopago_client'].with_context(
+            payment_method_id=payment_method_id
+        ).sudo()
         return client.check_payment(external_reference)
+
+    @api.model
+    def action_mezztt_mp_cancel_qr(self, external_reference, payment_method_id=None):
+        client = self.env['mezztt_mp_qr.mercadopago_client'].with_context(
+            payment_method_id=payment_method_id
+        ).sudo()
+        return client.cancel_qr(external_reference)
