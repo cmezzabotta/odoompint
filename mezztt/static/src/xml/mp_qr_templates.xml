@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mezztt.MercadoPagoQrPopup" owl="1">
+        <div class="mercadopago-qr-popup" role="dialog" aria-labelledby="mpqr-title">
+            <div class="checkout odoo-style">
+                <div class="left">
+                    <div class="brand">
+                        <div class="logo" aria-hidden="true">🛍️</div>
+                        <div>
+                            <h1 id="mpqr-title">Checkout</h1>
+                            <p class="lead">Revisión de compra y pago</p>
+                        </div>
+                    </div>
+                    <div class="items" aria-live="polite">
+                        <t t-foreach="component.items" t-as="item">
+                            <div class="item">
+                                <div>
+                                    <div class="name" t-esc="item['name']"/>
+                                    <div class="meta">
+                                        <t t-esc="item['qty']"/> × <t t-esc="item['price_formatted']"/>
+                                    </div>
+                                </div>
+                                <div class="amount" t-esc="item['total_formatted']"/>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="total">
+                        <div>Total</div>
+                        <div t-esc="component.totalFormatted"/>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="pay-card">
+                        <div class="pay-option" role="button">
+                            <div class="icon">💳</div>
+                            <div class="flex-grow">
+                                <div class="title">Pagar con MercadoPago</div>
+                                <div class="desc">Pago con QR</div>
+                            </div>
+                            <div class="price" t-esc="component.totalFormatted"/>
+                        </div>
+                        <div class="actions">
+                            <button class="btn" t-att-disabled="state.busy or undefined" t-on-click="onPay">
+                                <t t-if="state.busy">
+                                    <span class="spinner" aria-hidden="true"></span>
+                                    Procesando...
+                                </t>
+                                <t t-else>
+                                    Pagar
+                                </t>
+                            </button>
+                        </div>
+                        <div class="status" aria-live="assertive">
+                            <t t-if="state.status_message">
+                                <span t-att-class="'status-message ' + (state.status_type or '')">
+                                    <t t-esc="state.status_message"/>
+                                </span>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="qr-container" t-if="state.qr_image">
+                        <img t-att-src="state.qr_image" alt="Código QR de Mercado Pago"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
