@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.pos_ticket" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class,'pos-receipt')]" position="inside">
+            <div class="mp-fiscal-qr" t-if="receipt.fiscal_qr_url">
+                <div class="qr-title">Escaneá tu comprobante fiscal</div>
+                <img t-att-src="'/report/barcode/?type=QR&amp;value=' + receipt.fiscal_qr_url + '&amp;width=256&amp;height=256'" alt="QR Fiscal"/>
+                <div class="qr-footer">Mostrá este QR para descargar tu comprobante AFIP.</div>
+            </div>
+        </xpath>
+    </t>
+</templates>

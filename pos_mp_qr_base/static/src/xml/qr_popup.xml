@@ -1,23 +1,40 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="MpQrPopup" owl="1">
         <div class="mp-qr-popup">
             <div class="checkout-box">
                 <div class="summary">
-                    <h2>Checkout</h2>
-                    <p>Revisión de compra y pago</p>
-                    <div class="products">
-                        <p>Producto A - $499.00</p>
-                        <p>Servicio B - 2 × $120.50</p>
+                    <t t-set="receipt" t-value="props.order.export_for_printing()"/>
+                    <h2>Resumen del pedido</h2>
+                    <div class="products" t-if="receipt.orderlines">
+                        <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
+                            <p><t t-esc="line.quantity"/> × <t t-esc="line.product_name"/> — <t t-esc="line.price"/></p>
+                        </t>
                     </div>
-                    <h3>Total: $740,00</h3>
+                    <h3>Total a pagar: <t t-esc="receipt.total_with_tax"/></h3>
                 </div>
                 <div class="payment-box">
-                    <p><strong>Pagar con MercadoPago</strong><br/>Pago con QR</p>
-                    <button class="pay-btn" t-on-click="generateQr">Pagar</button>
-                    <div class="qr-placeholder" t-if="qrData">
-                        <img t-att-src="qrData" alt="QR Code"/>
+                    <p class="title"><strong>Pagar con Mercado Pago</strong><br/>Escaneá el QR y aboná desde tu app</p>
+                    <button class="pay-btn" t-on-click="generateQr" t-if="state.status in ['idle', 'error']" t-att-disabled="state.loading">
+                        <t t-if="state.loading">Generando QR…</t>
+                        <t t-else>Generar QR</t>
+                    </button>
+                    <div class="qr-area" t-if="state.status in ['waiting', 'approved']">
+                        <div class="qr-placeholder" t-ref="qrContainer">
+                            <img t-if="state.qrData" t-att-src="state.qrData" alt="QR Mercado Pago"/>
+                        </div>
+                        <p class="status" t-if="state.status == 'waiting'">
+                            Esperando confirmación de Mercado Pago…
+                            <t t-if="remainingSeconds">(<t t-esc="remainingSeconds"/>s)</t>
+                        </p>
+                        <p class="status success" t-if="state.status == 'approved'">Pago aprobado. Confirmando orden…</p>
+                    </div>
+                    <p class="status error" t-if="state.error"><t t-esc="state.error"/></p>
+                    <div class="status detail" t-if="state.status_detail and not state.error">
+                        <t t-esc="state.status_detail"/>
+                    </div>
+                    <div class="actions">
+                        <button class="cancel-btn" t-on-click="onCancel">Cancelar</button>
                     </div>
                 </div>
             </div>
