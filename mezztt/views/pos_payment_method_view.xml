@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_mercadopago_qr" model="account.journal">
+        <field name="name">Mercado Pago QR</field>
+        <field name="code">MPQR</field>
+        <field name="type">bank</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="pos_payment_method_mercadopago_qr" model="pos.payment.method">
+        <field name="name">Mercado Pago QR</field>
+        <field name="is_cash_count" eval="False"/>
+        <field name="split_transactions" eval="False"/>
+        <field name="journal_id" ref="account_journal_mercadopago_qr"/>
+    </record>
+</odoo>
