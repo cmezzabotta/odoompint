@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_mezztt" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.mezztt</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="60"/>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form_pos"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pos_payment_methods']" position="inside">
+                <h2>Mercado Pago QR</h2>
+                <div class="row mt16">
+                    <div class="col-12 col-lg-6">
+                        <div class="o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="mp_access_token" string="Credenciales"/>
+                                <div class="text-muted">
+                                    Completa los datos provistos por Mercado Pago para la sucursal y caja que emitirán QRs.
+                                </div>
+                                <div class="row mt16">
+                                    <div class="col-12">
+                                        <field name="mp_access_token" placeholder="APP_USR-XXXX"/>
+                                        <div class="text-muted">Token privado utilizado para autenticar las peticiones server-to-server.</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_public_key" placeholder="APP_USR-XXXX"/>
+                                        <div class="text-muted">Clave pública para inicializar SDKs del lado cliente.</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_integrator_id" placeholder="dev_XXXXX"/>
+                                        <div class="text-muted">Integrator ID asignado por Mercado Pago.</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_sponsor_id" placeholder="123456789"/>
+                                        <div class="text-muted">Sponsor ID si opera bajo la cuenta de un partner.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Sucursal y Caja"/>
+                                <div class="text-muted">
+                                    Información para asociar el QR a la sucursal (store) y caja (POS) correctas.
+                                </div>
+                                <div class="row mt16">
+                                    <div class="col-12 mt8">
+                                        <field name="mp_external_store_id" placeholder="STORE_01"/>
+                                        <div class="text-muted">Identificador de sucursal (external_store_id).</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_external_pos_id" placeholder="POS_01"/>
+                                        <div class="text-muted">Identificador de la caja (external_pos_id).</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_pos_id" placeholder="123456"/>
+                                        <div class="text-muted">POS ID provisto por Mercado Pago (pos_id).</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_user_id" placeholder="123456789"/>
+                                        <div class="text-muted">User ID del comercio.</div>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_collector_id" placeholder="123456789"/>
+                                        <div class="text-muted">Collector ID asociado al comercio.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16">
+                    <div class="col-12 col-lg-6">
+                        <div class="o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="QR dinámico"/>
+                                <div class="text-muted">Controla el modo de emisión del QR y la URL de notificación.</div>
+                                <div class="row mt16">
+                                    <div class="col-12 mt8">
+                                        <field name="mp_qr_mode" widget="radio"/>
+                                    </div>
+                                    <div class="col-12 mt8">
+                                        <field name="mp_notification_url" placeholder="https://..."/>
+                                        <div class="text-muted">Webhook opcional para recibir confirmaciones automáticas.</div>
+                                    </div>
+                                </div>
+                                <button type="object" name="action_test_connection" string="Probar conexión" class="btn btn-secondary mt16"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
