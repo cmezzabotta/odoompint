@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="mezztt.MercadoPagoQrPopup" owl="1">
+    <t t-name="mezztt_mp_qr.MercadoPagoQrPopup" owl="1">
         <div class="mercadopago-qr-popup" role="dialog" aria-labelledby="mpqr-title">
             <div class="checkout odoo-style">
                 <div class="left">

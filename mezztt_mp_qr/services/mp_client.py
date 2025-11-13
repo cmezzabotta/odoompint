@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 @dataclass
 class MercadoPagoClient:
-    """Lightweight helper to encapsulate Mercado Pago QR API calls."""
+    """Ligero cliente HTTP para la API de QR dinámico de Mercado Pago."""
 
     access_token: str
     public_key: Optional[str] = None
@@ -38,7 +38,12 @@ class MercadoPagoClient:
             headers["X-Idempotency-Key"] = self.sponsor_id
         return headers
 
-    def _request(self, method: str, endpoint: str, payload: Optional[Dict[str, Any]] = None):
+    def _request(
+        self,
+        method: str,
+        endpoint: str,
+        payload: Optional[Dict[str, Any]] = None,
+    ):
         url = f"{self.api_url.rstrip('/')}/{endpoint.lstrip('/')}"
         _logger.debug("Mercado Pago %s %s payload=%s", method, url, payload)
         response = requests.request(method, url, headers=self._headers(), json=payload, timeout=30)
@@ -59,7 +64,9 @@ class MercadoPagoClient:
 
     def create_dynamic_qr(self, payload: Dict[str, Any]):
         if not self.external_store_id or not self.external_pos_id:
-            raise ValueError("Es necesario configurar External Store ID y External POS ID para generar un QR.")
+            raise ValueError(
+                "Es necesario configurar External Store ID y External POS ID para generar un QR."
+            )
         body = {
             "external_store_id": self.external_store_id,
             "external_pos_id": self.external_pos_id,
@@ -73,10 +80,12 @@ class MercadoPagoClient:
         }
         if self.qr_mode == "static":
             body.pop("amount", None)
-        return self._request("POST", "/instore/orders/qr/seller/collectors/%s/pos/%s/qrs" % (
-            self.collector_id or self.user_id,
-            self.pos_id or self.external_pos_id,
-        ), body)
+        return self._request(
+            "POST",
+            "/instore/orders/qr/seller/collectors/%s/pos/%s/qrs"
+            % (self.collector_id or self.user_id, self.pos_id or self.external_pos_id),
+            body,
+        )
 
     def get_qr_payment(self, external_reference: str):
         endpoint = "/instore/orders/qr/seller/collectors/%s/pos/%s/orders/%s" % (
@@ -85,6 +94,14 @@ class MercadoPagoClient:
             external_reference,
         )
         return self._request("GET", endpoint)
+
+    def update_qr(self, external_reference: str, payload: Dict[str, Any]):
+        endpoint = "/instore/orders/qr/seller/collectors/%s/pos/%s/orders/%s" % (
+            self.collector_id or self.user_id,
+            self.pos_id or self.external_pos_id,
+            external_reference,
+        )
+        return self._request("PUT", endpoint, payload)
 
     def cancel_qr(self, external_reference: str):
         endpoint = "/instore/orders/qr/seller/collectors/%s/pos/%s/orders/%s" % (

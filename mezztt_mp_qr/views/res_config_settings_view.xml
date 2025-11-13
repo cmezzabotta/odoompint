@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="res_config_settings_view_form_mezztt" model="ir.ui.view">
-        <field name="name">res.config.settings.view.form.mezztt</field>
+    <record id="res_config_settings_view_form_mezztt_mp_qr" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.mezztt.mp.qr</field>
         <field name="model">res.config.settings</field>
         <field name="priority" eval="60"/>
         <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form_pos"/>
@@ -19,7 +19,7 @@
                                 <div class="row mt16">
                                     <div class="col-12">
                                         <field name="mp_access_token" placeholder="APP_USR-XXXX"/>
-                                        <div class="text-muted">Token privado utilizado para autenticar las peticiones server-to-server.</div>
+                                        <div class="text-muted">Token privado utilizado para autenticar las peticiones contra la API.</div>
                                     </div>
                                     <div class="col-12 mt8">
                                         <field name="mp_public_key" placeholder="APP_USR-XXXX"/>
