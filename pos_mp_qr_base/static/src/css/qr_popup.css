@@ -1,0 +1,35 @@
+
+.mp-qr-popup {
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    background: #f7f8fa;
+}
+.checkout-box {
+    display: flex;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+.summary, .payment-box {
+    padding: 20px;
+}
+.payment-box {
+    background: #e4f1f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.pay-btn {
+    margin-top: 20px;
+    background: #00897B;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.qr-placeholder {
+    margin-top: 15px;
+}
