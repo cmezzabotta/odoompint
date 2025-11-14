@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        Popup OWL inspirado en el diseño original del repositorio mp_qr_checkout.
+        Se adapta al sistema de componentes de Odoo POS pero conserva colores y
+        estructura.
+    -->
+    <t t-name="mercado_pago_qr_mezztt.MercadoPagoPopup" owl="1">
+        <div class="mpq-overlay">
+            <div class="mpq-dialog" role="dialog" aria-labelledby="mpq-title">
+                <button class="mpq-close" type="button" t-on-click="cancelPopup">
+                    ✕
+                </button>
+                <div class="mpq-left">
+                    <div class="mpq-brand">
+                        <div class="mpq-logo">🛍️</div>
+                        <div>
+                            <h1 id="mpq-title">Checkout</h1>
+                            <p class="mpq-lead">Revisión de compra y pago</p>
+                        </div>
+                    </div>
+                    <div class="mpq-items" aria-live="polite">
+                        <t t-foreach="props.lines" t-as="line" t-key="line.id">
+                            <div class="mpq-item">
+                                <div>
+                                    <div class="mpq-item-title"><t t-esc="line.display_name"/></div>
+                                    <div class="mpq-item-meta">
+                                        <t t-esc="line.quantity_display"/> ×
+                                        <t t-esc="line.unit_price_display"/>
+                                    </div>
+                                </div>
+                                <div class="mpq-item-amount">
+                                    <t t-esc="line.total_price_display"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="mpq-total">
+                        <div>Total</div>
+                        <div><t t-esc="props.total_display"/></div>
+                    </div>
+                </div>
+                <div class="mpq-right">
+                    <div class="mpq-pay-card">
+                        <div class="mpq-pay-option">
+                            <div class="mpq-icon">💳</div>
+                            <div class="mpq-pay-text">
+                                <div class="mpq-pay-title">Pagar con MercadoPago</div>
+                                <div class="mpq-pay-desc">Pago con QR</div>
+                            </div>
+                            <div class="mpq-pay-amount"><t t-esc="props.total_display"/></div>
+                        </div>
+                        <div class="mpq-actions">
+                            <button
+                                class="mpq-button"
+                                t-on-click="onPay"
+                                t-att-disabled="state.busy or state.stage != 'review'"
+                            >
+                                <t t-if="state.busy">
+                                    <span class="mpq-spinner" aria-hidden="true"></span>
+                                    Procesando…
+                                </t>
+                                <t t-else="">
+                                    Pagar
+                                </t>
+                            </button>
+                        </div>
+                        <div class="mpq-status" aria-live="assertive">
+                            <t t-if="state.stage == 'review' and state.status_message">
+                                <t t-esc="state.status_message"/>
+                            </t>
+                            <t t-if="state.stage == 'waiting'">
+                                <div class="mpq-status-title">Escaneá el QR con tu app de Mercado Pago</div>
+                                <!-- Aquí se muestra el QR estático de esta caja.
+                                     Para cambiarlo editar MP_CONFIG.STATIC_QR_URL en mp_config.js
+                                     y mp_config.py. -->
+                                <img t-att-src="props.qr_url" alt="Código QR Mercado Pago" class="mpq-qr"/>
+                                <div class="mpq-status-subtitle">Estamos esperando la confirmación del pago…</div>
+                            </t>
+                            <t t-if="state.stage == 'success'">
+                                <div class="mpq-success">Pago procesado ✔️</div>
+                                <div class="mpq-success-note">La orden se validará automáticamente.</div>
+                            </t>
+                            <t t-if="state.stage == 'error'">
+                                <div class="mpq-error"><t t-esc="state.status_message"/></div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
