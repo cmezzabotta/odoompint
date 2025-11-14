@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checkout - Cajero</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="checkout.js"></script>
+</head>
+<body>
+  <div class="checkout odoo-style" role="dialog" aria-labelledby="title">
+    <div class="left">
+      <div class="brand">
+        <div class="logo">🛍️</div>
+        <div>
+          <h1 id="title">Checkout</h1>
+          <p class="lead">Revisión de compra y pago</p>
+        </div>
+      </div>
+      <div class="items" aria-live="polite" id="itemsList"></div>
+      <div class="total" id="totalRow">
+        <div>Total</div>
+        <div id="totalAmount">$0.00</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="pay-card">
+        <div class="pay-option" role="button" aria-pressed="false" tabindex="0" id="payOption">
+          <div class="icon">💳</div>
+          <div style="flex:1">
+            <div class="title">Pagar con MercadoPago</div>
+            <div class="desc">Pago con QR</div>
+          </div>
+          <div style="min-width:48px;text-align:right" id="rightAmount">$0.00</div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="payBtn">Pagar</button>
+        </div>
+        <div class="status" id="statusArea" aria-live="assertive"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const defaultItems = [
+      { id: 'A1', name: 'Producto A', qty: 1, unit: 499.00 },
+      { id: 'B2', name: 'Servicio B', qty: 2, unit: 120.50 }
+    ];
+    const fmt = v => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(v);
+    const itemsList = document.getElementById('itemsList');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const rightAmountEl = document.getElementById('rightAmount');
+    const payBtn = document.getElementById('payBtn');
+    const statusArea = document.getElementById('statusArea');
+    const payOption = document.getElementById('payOption');
+    let items = defaultItems.slice();
+    let busy = false;
+
+    function renderItems() {
+      itemsList.innerHTML = '';
+      let total = 0;
+      items.forEach(it => {
+        const el = document.createElement('div');
+        el.className = 'item';
+        el.innerHTML = `
+          <div>
+            <div style="font-weight:700">${it.name}</div>
+            <div class="meta">${it.qty} × ${fmt(it.unit)}</div>
+          </div>
+          <div style="text-align:right">${fmt(it.unit * it.qty)}</div>`;
+        itemsList.appendChild(el);
+        total += it.unit * it.qty;
+      });
+      totalAmountEl.textContent = fmt(total);
+      rightAmountEl.textContent = fmt(total);
+    }
+
+    function setStatus(html, { type } = {}) {
+      statusArea.innerHTML = html || '';
+      statusArea.style.color = type === 'error'
+        ? getComputedStyle(document.documentElement).getPropertyValue('--danger')
+        : '';
+    }
+    function setBusy(on) {
+      busy = !!on;
+      payBtn.disabled = busy;
+      payBtn.innerHTML = busy
+        ? '<span class="spinner" aria-hidden="true"></span> Procesando...'
+        : 'Pagar';
+    }
+
+    async function doPay() {
+      if (busy) return;
+      setStatus('');
+      setBusy(true);
+      const total = items.reduce((acc, i) => acc + i.unit * i.qty, 0);
+      const paymentData = {
+        amount: Math.round(total * 100) / 100,
+        currency: 'ARS',
+        items: items.map(i => ({ id: i.id, name: i.name, qty: i.qty, unit: i.unit })),
+        metadata: { source: 'cajero-web', singleOption: true }
+      };
+      try {
+        if (typeof window.processPayment !== 'function')
+          throw new Error('processPayment no está definida');
+        const result = await window.processPayment(paymentData);
+        if (result && result.ok) {
+          setStatus('Código QR listo ✔️ — Escaneá el código para pagar.');
+        } else {
+          const message = (result && result.error) ? result.error : 'Error en el pago';
+          setStatus(`Pago rechazado: ${message}`, { type: 'error' });
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus(String(err.message || err), { type: 'error' });
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    document.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        doPay();
+      }
+    });
+    payBtn.addEventListener('click', doPay);
+    payOption.addEventListener('click', () => {
+      payOption.classList.add('active');
+      setTimeout(() => payOption.classList.remove('active'), 200);
+    });
+    renderItems();
+  </script>
+</body>
+</html>
