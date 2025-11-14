@@ -4,8 +4,8 @@
     "summary": "Cobro con código QR estático integrado a Mercado Pago para el POS de Odoo 18.",
     "description": """Extiende el Punto de Venta moderno (OWL) para mostrar un popup de pago con código QR estático de Mercado Pago y crear órdenes reales mediante la API oficial.""",
     "version": "18.0.1.0.0",
-    "author": "mezztt",
-    "website": "https://www.mercadopago.com.ar",
+    "author": "Mezztt",
+    "website": "https://mezztt.com",
     "license": "LGPL-3",
     "category": "Point of Sale",
     "depends": ["point_of_sale"],
@@ -23,5 +23,5 @@
         ],
     },
     "installable": True,
-    "application": False,
+    "application": True,
 }
