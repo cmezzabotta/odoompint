@@ -1,0 +1,29 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <t t-name="pos_ticket_mezztt.fiscal_ticket_template" t-inherit="point_of_sale.Receipt" t-inherit-mode="extension">
+    <xpath expr="//div[@class='pos-receipt']" position="inside">
+      <div class="fiscal-ticket-info">
+        <p class="fiscal-ticket-order">
+          <strong>Orden:</strong>
+          <t t-esc="receipt.pos_reference or receipt.order_name or receipt.name"/>
+        </p>
+        <p>
+          <strong>Fecha:</strong>
+          <t t-esc="receipt.order_datetime or receipt.date and receipt.date.printed"/>
+        </p>
+        <p>
+          <strong>Condición IVA Cliente:</strong>
+          <t t-esc="receipt.customer_vat_condition or _('Consumidor Final')"/>
+        </p>
+        <p><strong>CUIT:</strong> <t t-esc="receipt.company_cuit"/></p>
+        <p><strong>Punto de Venta:</strong> <t t-esc="receipt.pos_branch"/></p>
+        <p><strong>CAE:</strong> <t t-esc="receipt.cae"/></p>
+        <p><strong>Vto CAE:</strong> <t t-esc="receipt.cae_due_date"/></p>
+        <div class="qr-fiscal" t-if="receipt.qr_afip_base64">
+          <img t-att-src="'data:image/png;base64,%s' % receipt.qr_afip_base64" alt="QR AFIP"/>
+        </div>
+      </div>
+    </xpath>
+  </t>
+</templates>
