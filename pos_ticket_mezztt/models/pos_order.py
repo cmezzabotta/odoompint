@@ -27,10 +27,26 @@ class PosOrder(models.Model):
     fiscal_error_message = fields.Text(string="Mensaje de error fiscal")
 
     @api.model
-    def _process_order(self, order, draft=False, existing_order=False):
-        pos_orders = super()._process_order(order, draft=draft, existing_order=existing_order)
-        for pos_order in pos_orders:
+    def _process_order(self, order, existing_order=False):
+        """Extend order processing to run fiscal flow without changing core behavior."""
+
+        pos_orders = super()._process_order(order, existing_order=existing_order)
+
+        orders_to_process = (
+            pos_orders
+            if isinstance(pos_orders, models.Model)
+            else self.browse(
+                [pos_orders]
+                if isinstance(pos_orders, int)
+                else pos_orders
+                if isinstance(pos_orders, (list, tuple))
+                else []
+            )
+        )
+
+        for pos_order in orders_to_process:
             pos_order._handle_fiscal_flow()
+
         return pos_orders
 
     # ---------------------------------------------------------------------
@@ -42,6 +58,7 @@ class PosOrder(models.Model):
             try:
                 invoice = order._ensure_afip_invoice()
                 order._fill_fiscal_data_from_invoice(invoice)
+                order._mark_as_invoiced(invoice)
             except UserError as exc:
                 order.write({"fiscal_error_message": str(exc)})
                 _logger.warning("No se pudo emitir el ticket fiscal para %s: %s", order.name, exc)
@@ -136,6 +153,20 @@ class PosOrder(models.Model):
                 "fiscal_error_message": False,
             }
         )
+
+    def _mark_as_invoiced(self, invoice):
+        """Ensure the POS order reflects an invoiced state when a fiscal invoice exists."""
+
+        self.ensure_one()
+        values = {}
+        if invoice and not self.account_move:
+            values["account_move"] = invoice.id
+
+        if invoice and self.state != "invoiced":
+            values["state"] = "invoiced"
+
+        if values:
+            self.write(values)
 
     def _generate_qr_base64(self, qr_url):
         if not qr_url:
