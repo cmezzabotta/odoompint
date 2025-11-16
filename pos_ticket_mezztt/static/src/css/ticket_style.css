@@ -1,11 +1,29 @@
 
 .fiscal-ticket-info {
+    border-top: 1px dashed #000;
+    margin-top: 12px;
+    padding-top: 8px;
     font-size: 12px;
-    margin-top: 10px;
+    line-height: 1.25;
     text-align: center;
 }
+
+.fiscal-ticket-info p {
+    margin: 2px 0;
+    word-break: break-word;
+}
+
+.fiscal-ticket-info strong {
+    font-weight: 600;
+}
+
+.fiscal-ticket-order {
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
 .qr-fiscal img {
-    margin-top: 5px;
+    margin-top: 8px;
     width: 160px;
     height: 160px;
 }
