@@ -1,0 +1,11 @@
+
+.fiscal-ticket-info {
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+.qr-fiscal img {
+    margin-top: 5px;
+    width: 160px;
+    height: 160px;
+}
