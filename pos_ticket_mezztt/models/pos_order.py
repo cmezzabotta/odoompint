@@ -28,14 +28,21 @@ class PosOrder(models.Model):
 
     @api.model
     def _process_order(self, order, existing_order=False):
+        """Extend order processing to run fiscal flow without changing core behavior."""
+
         pos_orders = super()._process_order(order, existing_order=existing_order)
 
-        if isinstance(pos_orders, models.Model):
-            orders_to_process = pos_orders
-        elif isinstance(pos_orders, (int, list, tuple)):
-            orders_to_process = self.browse(pos_orders)
-        else:  # pragma: no cover - defensive fallback
-            orders_to_process = self.browse([])
+        orders_to_process = (
+            pos_orders
+            if isinstance(pos_orders, models.Model)
+            else self.browse(
+                [pos_orders]
+                if isinstance(pos_orders, int)
+                else pos_orders
+                if isinstance(pos_orders, (list, tuple))
+                else []
+            )
+        )
 
         for pos_order in orders_to_process:
             pos_order._handle_fiscal_flow()
