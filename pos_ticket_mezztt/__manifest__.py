@@ -6,13 +6,12 @@
     "author": "Mezztt",
     "category": "Point of Sale",
     "depends": ["point_of_sale", "l10n_ar_afipws"],
-    "data": [
-        "views/assets.xml"
-    ],
+    "data": [],
     "assets": {
         "point_of_sale.assets": [
-            "/pos_ticket_mezztt/static/src/xml/fiscal_ticket_template.xml",
-            "/pos_ticket_mezztt/static/src/css/ticket_style.css"
+            "pos_ticket_mezztt/static/src/xml/fiscal_ticket_template.xml",
+            "pos_ticket_mezztt/static/src/css/ticket_style.css",
+            "pos_ticket_mezztt/static/src/js/fiscal_receipt.js",
         ]
     },
     "installable": True,
