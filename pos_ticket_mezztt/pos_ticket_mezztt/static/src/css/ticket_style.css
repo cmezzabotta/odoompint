@@ -1,0 +1,53 @@
+/* Estilo general del ticket fiscal */
+.fiscal-ticket-info {
+    border-top: 1px dashed #000;
+    margin-top: 12px;
+    padding-top: 8px;
+    font-size: 12px;
+    line-height: 1.25;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Estilo para cada línea del ticket fiscal */
+.fiscal-ticket-info p {
+    margin: 2px 0;
+    word-break: break-word;
+}
+
+/* Negrita para etiquetas */
+.fiscal-ticket-info strong {
+    font-weight: 600;
+}
+
+/* Destacado para el número de orden */
+.fiscal-ticket-order {
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+/* Estilo del QR fiscal */
+.qr-fiscal img {
+    margin-top: 8px;
+    width: 160px;
+    height: 160px;
+}
+
+/* Estilo para forzar el ancho real del ticket */
+.pos-receipt {
+    width: 80mm !important;
+    max-width: 80mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+}
+
+/* Asegura que el navegador no imponga márgenes al imprimir */
+@media print {
+    html, body {
+        width: 80mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 12px !important;
+    }
+}
