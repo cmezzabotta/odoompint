@@ -2,6 +2,7 @@
 
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { Order } from "@point_of_sale/app/store/order";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -45,7 +46,13 @@ patch(ReceiptScreen.prototype, {
     },
     async _ensureFiscalTicketData() {
         const order = this.currentOrder;
-        if (!order || order.hasFiscalTicketData() || !order.backendId) {
+        if (
+            !order ||
+            order.hasFiscalTicketData() ||
+            !order.backendId ||
+            !order.is_to_invoice ||
+            !order.is_to_invoice()
+        ) {
             return;
         }
         const payload = await this.rpc("/pos/order/receipt_fiscal", {
@@ -66,3 +73,5 @@ patch(ReceiptScreen.prototype, {
         return true;
     },
 });
+
+OrderReceipt.template = "pos_ticket_mezztt.FiscalAwareOrderReceipt";
