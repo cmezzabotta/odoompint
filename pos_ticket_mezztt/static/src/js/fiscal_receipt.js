@@ -79,3 +79,7 @@ patch(ReceiptScreen.prototype, {
         return true;
     },
 });
+
+// Usar plantilla conmutada que decide si imprime el ticket fiscal propio
+// o el recibo estándar según el modo de facturación del pedido.
+ReceiptScreen.template = "pos_ticket_mezztt.FiscalAwareOrderReceipt";
