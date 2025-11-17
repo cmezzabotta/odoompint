@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_ticket_mezztt.OrderReceiptInherit" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'pos-receipt')]" position="before">
+            <t t-if="props.order and props.order.is_to_invoice and props.order.is_to_invoice()">
+                <t t-call="pos_ticket_mezztt.fiscal_ticket_template"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[contains(@class, 'pos-receipt')]" position="attributes">
+            <attribute name="t-if">not (props.order and props.order.is_to_invoice and props.order.is_to_invoice())</attribute>
+        </xpath>
+    </t>
+</templates>
