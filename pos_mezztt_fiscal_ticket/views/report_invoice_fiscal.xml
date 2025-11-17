@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_invoice_document_fiscal" inherit_id="account.report_invoice_document">
-        <xpath expr="//div[@class='page']" position="inside">
+        <xpath expr="//div[contains(concat(' ', normalize-space(@class), ' '), ' page ')]" position="inside">
             <div class="fiscal-ticket">
                 <div class="fiscal-ticket__header">
                     <h2>FACTURA ELECTRÓNICA</h2>
