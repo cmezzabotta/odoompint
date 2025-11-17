@@ -3,24 +3,43 @@
     <template id="report_invoice_document_fiscal" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@class='page']" position="inside">
             <div class="fiscal-ticket">
-                <h2 style="text-align:center;">FACTURA ELECTRÓNICA</h2>
-                <p><strong>CAE:</strong> <t t-esc="o.l10n_ar_afip_auth_code"/></p>
-                <p><strong>Vto CAE:</strong> <t t-esc="o.l10n_ar_afip_auth_code_due"/></p>
-                <p><strong>CUIT:</strong> <t t-esc="o.company_id.vat"/></p>
-                <p><strong>Razón Social:</strong> <t t-esc="o.company_id.name"/></p>
-                <p><strong>Dirección:</strong> <t t-esc="o.company_id.street"/></p>
-                <p><strong>Fecha:</strong> <t t-esc="o.invoice_date"/></p>
-                <p><strong>Nro Factura:</strong> <t t-esc="o.name"/></p>
-                <p><strong>Cliente:</strong> <t t-esc="o.partner_id.name"/></p>
-                <p><strong>CUIT Cliente:</strong> <t t-esc="o.partner_id.vat or ''"/></p>
+                <div class="fiscal-ticket__header">
+                    <h2>FACTURA ELECTRÓNICA</h2>
+                    <p><strong>Razón Social:</strong> <t t-esc="o.company_id.name"/></p>
+                    <p><strong>CUIT:</strong> <t t-esc="o.company_id.vat"/></p>
+                    <p><strong>Domicilio:</strong> <t t-esc="o.company_id.contact_address"/></p>
+                </div>
+                <div class="fiscal-ticket__meta">
+                    <p><strong>Comprobante:</strong> <t t-esc="o.move_type"/> <t t-esc="o.name"/></p>
+                    <p><strong>Fecha:</strong> <t t-esc="o.invoice_date"/></p>
+                    <p><strong>Cliente:</strong> <t t-esc="o.partner_id.display_name"/></p>
+                    <p><strong>Documento Cliente:</strong> <t t-esc="o.partner_id.vat or '-'"/></p>
+                </div>
                 <hr/>
-                <t t-foreach="o.invoice_line_ids" t-as="line">
-                    <p><t t-esc="line.product_id.name"/> - <t t-esc="line.quantity"/> x <t t-esc="line.price_unit"/></p>
-                </t>
+                <div class="fiscal-ticket__lines">
+                    <t t-foreach="o.invoice_line_ids" t-as="line">
+                        <div class="fiscal-ticket__line">
+                            <span class="fiscal-ticket__product"><t t-esc="line.product_id.name"/></span>
+                            <span class="fiscal-ticket__qty">x <t t-esc="line.quantity"/></span>
+                            <span class="fiscal-ticket__price"><t t-esc="line.price_unit"/> <t t-esc="o.currency_id.symbol"/></span>
+                        </div>
+                    </t>
+                </div>
                 <hr/>
-                <p><strong>Total:</strong> <t t-esc="o.amount_total"/></p>
-                <div class="qr-container">
-                    <img t-att-src="'data:image/png;base64,%s' % o.l10n_ar_afip_qr_code"/>
+                <div class="fiscal-ticket__totals">
+                    <p><strong>Subtotal:</strong> <t t-esc="o.amount_untaxed"/> <t t-esc="o.currency_id.symbol"/></p>
+                    <p><strong>Impuestos:</strong> <t t-esc="o.amount_tax"/> <t t-esc="o.currency_id.symbol"/></p>
+                    <p class="fiscal-ticket__total"><strong>Total:</strong> <t t-esc="o.amount_total"/> <t t-esc="o.currency_id.symbol"/></p>
+                </div>
+                <hr/>
+                <div class="fiscal-ticket__afip">
+                    <p><strong>CAE:</strong> <t t-esc="o.l10n_ar_afip_auth_code or 'Pendiente'"/></p>
+                    <p><strong>Vto CAE:</strong> <t t-esc="o.l10n_ar_afip_auth_code_due or 'Pendiente'"/></p>
+                    <p><strong>AFIP QR:</strong></p>
+                    <div class="qr-container" t-if="o.l10n_ar_afip_qr_code">
+                        <img t-att-src="'data:image/png;base64,%s' % o.l10n_ar_afip_qr_code" alt="AFIP QR"/>
+                    </div>
+                    <p class="fiscal-ticket__legend">Esta factura se emite de acuerdo a la RG 1415 AFIP.</p>
                 </div>
             </div>
         </xpath>
