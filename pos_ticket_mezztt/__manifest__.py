@@ -10,6 +10,7 @@
     "assets": {
         "point_of_sale.assets": [
             "pos_ticket_mezztt/static/src/xml/fiscal_ticket_template.xml",
+            "pos_ticket_mezztt/static/src/xml/fiscal_order_receipt_inherit.xml",
             "pos_ticket_mezztt/static/src/css/ticket_style.css",
             "pos_ticket_mezztt/static/src/js/fiscal_receipt.js",
         ]
