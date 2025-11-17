@@ -1,0 +1,14 @@
+/* Fiscal ticket CSS */
+.fiscal-ticket {
+    width: 80mm;
+    font-size: 12px;
+    padding: 5px;
+}
+.qr-container {
+    text-align: center;
+    margin-top: 10px;
+}
+.qr-container img {
+    width: 150px;
+    height: 150px;
+}

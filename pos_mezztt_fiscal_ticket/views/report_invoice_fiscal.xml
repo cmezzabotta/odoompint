@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_invoice_document_fiscal" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@class='page']" position="inside">
+            <div class="fiscal-ticket">
+                <h2 style="text-align:center;">FACTURA ELECTRÓNICA</h2>
+                <p><strong>CAE:</strong> <t t-esc="o.l10n_ar_afip_auth_code"/></p>
+                <p><strong>Vto CAE:</strong> <t t-esc="o.l10n_ar_afip_auth_code_due"/></p>
+                <p><strong>CUIT:</strong> <t t-esc="o.company_id.vat"/></p>
+                <p><strong>Razón Social:</strong> <t t-esc="o.company_id.name"/></p>
+                <p><strong>Dirección:</strong> <t t-esc="o.company_id.street"/></p>
+                <p><strong>Fecha:</strong> <t t-esc="o.invoice_date"/></p>
+                <p><strong>Nro Factura:</strong> <t t-esc="o.name"/></p>
+                <p><strong>Cliente:</strong> <t t-esc="o.partner_id.name"/></p>
+                <p><strong>CUIT Cliente:</strong> <t t-esc="o.partner_id.vat or ''"/></p>
+                <hr/>
+                <t t-foreach="o.invoice_line_ids" t-as="line">
+                    <p><t t-esc="line.product_id.name"/> - <t t-esc="line.quantity"/> x <t t-esc="line.price_unit"/></p>
+                </t>
+                <hr/>
+                <p><strong>Total:</strong> <t t-esc="o.amount_total"/></p>
+                <div class="qr-container">
+                    <img t-att-src="'data:image/png;base64,%s' % o.l10n_ar_afip_qr_code"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
