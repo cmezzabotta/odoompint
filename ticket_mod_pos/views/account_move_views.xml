@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Botón en la vista formulario de facturas para imprimir en Ticket 80mm.
+         Se muestra para facturas de cliente y SOLO si detectamos que es de POS. -->
+    <record id="view_move_form_inherit_ticket_button" model="ir.ui.view">
+        <field name="name">account.move.form.ticket.pos.button</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(ticket_mod_pos.action_report_invoice_ticket)d"
+                    type="action"
+                    string="Imprimir Ticket 80 mm"
+                    class="btn btn-secondary"
+                    attrs="{
+                        'invisible': ['|', ('move_type', 'not in', ['out_invoice','out_refund']), ('is_pos_invoice','=', False)]
+                    }"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
