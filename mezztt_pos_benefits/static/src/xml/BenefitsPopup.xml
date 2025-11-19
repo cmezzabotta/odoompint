@@ -1,0 +1,24 @@
+<templates id="template" xml:space="preserve">
+<t t-name="BenefitsPopup" owl="1">
+    <div class="popup popup-benefits">
+        <div class="title">Beneficios</div>
+
+        <div class="tabs">
+            <button t-on-click="switchTab('giftcard')" t-att-class="{'active': state.tab=='giftcard'}">Giftcard</button>
+            <button t-on-click="switchTab('coupon')" t-att-class="{'active': state.tab=='coupon'}">Cupón</button>
+        </div>
+
+        <t t-if="state.tab=='giftcard'">
+            <input placeholder="Código de Giftcard" t-model="state.giftcard"/>
+            <button class="apply" t-on-click="applyGiftcard">Aplicar</button>
+        </t>
+
+        <t t-if="state.tab=='coupon'">
+            <input placeholder="Código de cupón" t-model="state.coupon"/>
+            <button class="apply" t-on-click="applyCoupon">Aplicar</button>
+        </t>
+
+        <button class="cancel" t-on-click="cancel">Cerrar</button>
+    </div>
+</t>
+</templates>

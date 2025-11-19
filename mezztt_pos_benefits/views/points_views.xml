@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_pos_points_tree" model="ir.ui.view">
+        <field name="name">pos.loyalty.points.tree</field>
+        <field name="model">pos.loyalty.points</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id"/>
+                <field name="points"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

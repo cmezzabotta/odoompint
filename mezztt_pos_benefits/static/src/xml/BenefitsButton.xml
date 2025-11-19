@@ -1,0 +1,5 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="BenefitsButton">
+        <button class="button benefits-btn">Beneficios</button>
+    </t>
+</templates>

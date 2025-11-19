@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_pos_coupon_tree" model="ir.ui.view">
+        <field name="name">pos.coupon.tree</field>
+        <field name="model">pos.coupon</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="type"/>
+                <field name="value"/>
+                <field name="active"/>
+                <field name="expiration_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_coupon_form" model="ir.ui.view">
+        <field name="name">pos.coupon.form</field>
+        <field name="model">pos.coupon</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet><group>
+                    <field name="code"/>
+                    <field name="type"/>
+                    <field name="value"/>
+                    <field name="expiration_date"/>
+                    <field name="active"/>
+                </group></sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

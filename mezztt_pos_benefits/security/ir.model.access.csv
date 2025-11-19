@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+giftcard_access,Giftcard Access,model_pos_giftcard,,1,1,1,1
+coupon_access,Coupon Access,model_pos_coupon,,1,1,1,1
+points_access,Points Access,model_pos_loyalty_points,,1,1,1,1
