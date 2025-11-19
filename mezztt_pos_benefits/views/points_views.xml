@@ -1,12 +1,51 @@
 <odoo>
     <record id="view_pos_points_tree" model="ir.ui.view">
-        <field name="name">pos.loyalty.points.tree</field>
-        <field name="model">pos.loyalty.points</field>
+        <field name="name">pos.loyalty_points.tree</field>
+        <field name="model">pos.loyalty_points</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="partner_id"/>
+                <field name="customer_id"/>
                 <field name="points"/>
+                <field name="updated_at"/>
             </tree>
         </field>
+    </record>
+
+    <record id="view_pos_points_form" model="ir.ui.view">
+        <field name="name">pos.loyalty_points.form</field>
+        <field name="model">pos.loyalty_points</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="customer_id"/>
+                            <field name="points"/>
+                        </group>
+                        <group>
+                            <field name="updated_at" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_points_search" model="ir.ui.view">
+        <field name="name">pos.loyalty_points.search</field>
+        <field name="model">pos.loyalty_points</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="customer_id"/>
+                <field name="points"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_points" model="ir.actions.act_window">
+        <field name="name">Puntos</field>
+        <field name="res_model">pos.loyalty_points</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_points_search"/>
     </record>
 </odoo>

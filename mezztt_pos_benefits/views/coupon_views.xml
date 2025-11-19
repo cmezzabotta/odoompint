@@ -5,10 +5,12 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="code"/>
-                <field name="type"/>
-                <field name="value"/>
-                <field name="active"/>
+                <field name="discount_type"/>
+                <field name="discount_value"/>
                 <field name="expiration_date"/>
+                <field name="max_uses"/>
+                <field name="used_count"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -18,14 +20,47 @@
         <field name="model">pos.coupon</field>
         <field name="arch" type="xml">
             <form>
-                <sheet><group>
-                    <field name="code"/>
-                    <field name="type"/>
-                    <field name="value"/>
-                    <field name="expiration_date"/>
-                    <field name="active"/>
-                </group></sheet>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="discount_type"/>
+                            <field name="discount_value"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="expiration_date"/>
+                            <field name="max_uses"/>
+                            <field name="used_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notas">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
+    </record>
+
+    <record id="view_pos_coupon_search" model="ir.ui.view">
+        <field name="name">pos.coupon.search</field>
+        <field name="model">pos.coupon</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <filter name="state_active" string="Activos" domain="[('state', '=', 'active')]"/>
+                <filter name="state_draft" string="Borrador" domain="[('state', '=', 'draft')]"/>
+                <filter name="state_expired" string="Vencidos" domain="[('state', '=', 'expired')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_coupon" model="ir.actions.act_window">
+        <field name="name">Cupones</field>
+        <field name="res_model">pos.coupon</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_coupon_search"/>
     </record>
 </odoo>
