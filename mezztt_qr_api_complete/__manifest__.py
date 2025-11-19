@@ -1,23 +1,23 @@
-
 {
-    "name": "Mezztt POS Mercado Pago QR (Totem)",
-    "version": "1.0",
+    "name": "Mezztt POS Mercado Pago QR Estático",
+    "version": "18.0.1.0.0",
     "author": "Mezztt",
     "category": "Point of Sale",
     "license": "LGPL-3",
-    "summary": "Mercado Pago QR",
+    "summary": "Terminal Mercado Pago QR estático para el POS estándar",
     "depends": ["point_of_sale"],
     "data": [
-        "views/pos_config_view.xml",
-        "views/payment_method_view.xml",
-        "views/assets.xml",
+        "data/pos_payment_terminal_data.xml",
+        "views/pos_payment_method_views.xml",
         "security/ir.model.access.csv"
     ],
     "assets": {
         "point_of_sale.assets": [
-            "mezztt_qr_api_complete/static/src/js/mp_qr_payment.js",
-            "mezztt_qr_api_complete/static/src/xml/mp_qr_templates.xml"
+            "mezztt_qr_api_complete/static/src/app/services/pos_store_patch.js",
+            "mezztt_qr_api_complete/static/src/app/components/mp_qr_popup/mp_qr_popup.js",
+            "mezztt_qr_api_complete/static/src/app/components/mp_qr_popup/mp_qr_popup.xml",
+            "mezztt_qr_api_complete/static/src/app/utils/payment/payment_mp_qr_static.js",
         ]
     },
-    "installable": True
+    "installable": True,
 }

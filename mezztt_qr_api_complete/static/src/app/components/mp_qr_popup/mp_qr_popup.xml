@@ -1,0 +1,42 @@
+<t t-name="mezztt_qr_api_complete.MpQrPopup" owl="1">
+    <Dialog size="md" t-props="props">
+        <t t-set-slot="title">
+            <span class="o_mpqr_title">Mercado Pago • <t t-esc="props.orderName"/></span>
+        </t>
+        <div class="o_mpqr_body d-flex flex-column align-items-center">
+            <div class="o_mpqr_amount h4 mb-2">
+                <t t-esc="props.formattedAmount"/>
+            </div>
+            <div class="o_mpqr_qr mb-3">
+                <img t-att-src="props.qrUrl" alt="Mercado Pago QR" class="o_mpqr_qr_image"/>
+            </div>
+            <div class="o_mpqr_status text-center">
+                <t t-if="state.status == 'pending'">
+                    <span class="badge bg-info text-dark">
+                        <t t-esc="env._t('Esperando confirmación...')"/>
+                    </span>
+                </t>
+                <t t-elif="state.status == 'approved'">
+                    <span class="badge bg-success">
+                        <t t-esc="env._t('Pago aprobado')"/>
+                    </span>
+                </t>
+                <t t-else="">
+                    <span class="badge bg-danger">
+                        <t t-esc="state.message"/>
+                    </span>
+                </t>
+            </div>
+            <div class="text-muted small mt-2 text-center">
+                <t t-esc="env._t('Pídele al cliente que escanee el QR con la app de Mercado Pago.')"/>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <div class="d-flex justify-content-end w-100">
+                <button type="button" class="btn btn-secondary" t-on-click="cancelPayment">
+                    <i class="fa fa-times me-2"/> <t t-esc="env._t('Cancelar')"/>
+                </button>
+            </div>
+        </t>
+    </Dialog>
+</t>

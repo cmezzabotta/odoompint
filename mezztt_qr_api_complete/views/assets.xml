@@ -1,9 +1,0 @@
-
-<odoo>
-    <template id="mpqr_assets" inherit_id="point_of_sale.assets">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/mezztt_qr_api_complete/static/src/js/mp_qr_payment.js"/>
-            <t t-call="mezztt_qr_api_complete.mp_qr_templates"/>
-        </xpath>
-    </template>
-</odoo>
