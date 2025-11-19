@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_payment_method_mpqr_static" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.mercadopago.qr.static</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_payment_method_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <group attrs="{'invisible': [('use_payment_terminal', '!=', 'mercado_pago_qr_static')]}">
+                    <field name="mp_qr_enabled" invisible="1"/>
+                    <field name="mp_access_token" password="True" attrs="{'required': [('use_payment_terminal', '=', 'mercado_pago_qr_static')]}"/>
+                    <field name="mp_public_key"/>
+                    <field name="mp_store_id" attrs="{'required': [('use_payment_terminal', '=', 'mercado_pago_qr_static')]}"/>
+                    <field name="mp_pos_id" attrs="{'required': [('use_payment_terminal', '=', 'mercado_pago_qr_static')]}"/>
+                    <field name="mp_external_pos_id" attrs="{'required': [('use_payment_terminal', '=', 'mercado_pago_qr_static')]}"/>
+                    <field name="mp_qr_static" placeholder="https://..." attrs="{'required': [('use_payment_terminal', '=', 'mercado_pago_qr_static')]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
