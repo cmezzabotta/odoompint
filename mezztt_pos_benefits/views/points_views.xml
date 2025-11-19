@@ -3,7 +3,7 @@
         <field name="name">pos.loyalty_points.tree</field>
         <field name="model">pos.loyalty_points</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree string="Puntos">
                 <field name="customer_id"/>
                 <field name="points"/>
                 <field name="updated_at"/>
@@ -15,16 +15,12 @@
         <field name="name">pos.loyalty_points.form</field>
         <field name="model">pos.loyalty_points</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Puntos">
                 <sheet>
                     <group>
-                        <group>
-                            <field name="customer_id"/>
-                            <field name="points"/>
-                        </group>
-                        <group>
-                            <field name="updated_at" readonly="1"/>
-                        </group>
+                        <field name="customer_id"/>
+                        <field name="points"/>
+                        <field name="updated_at" readonly="1"/>
                     </group>
                 </sheet>
             </form>
@@ -37,15 +33,15 @@
         <field name="arch" type="xml">
             <search>
                 <field name="customer_id"/>
-                <field name="points"/>
             </search>
         </field>
     </record>
 
-    <record id="action_pos_points" model="ir.actions.act_window">
+    <record id="action_pos_loyalty_points" model="ir.actions.act_window">
         <field name="name">Puntos</field>
         <field name="res_model">pos.loyalty_points</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_pos_points_tree"/>
         <field name="search_view_id" ref="view_pos_points_search"/>
     </record>
 </odoo>

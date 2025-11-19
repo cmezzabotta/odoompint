@@ -3,7 +3,7 @@
         <field name="name">pos.coupon.tree</field>
         <field name="model">pos.coupon</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree string="Cupones">
                 <field name="code"/>
                 <field name="discount_type"/>
                 <field name="discount_value"/>
@@ -19,26 +19,27 @@
         <field name="name">pos.coupon.form</field>
         <field name="model">pos.coupon</field>
         <field name="arch" type="xml">
-            <form>
+            <form string="Cupón">
                 <sheet>
                     <group>
                         <group>
                             <field name="code"/>
-                            <field name="discount_type"/>
-                            <field name="discount_value"/>
-                            <field name="state"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,active,expired"/>
+                            <field name="active"/>
                         </group>
                         <group>
+                            <field name="discount_type"/>
+                            <field name="discount_value"/>
                             <field name="expiration_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
                             <field name="max_uses"/>
                             <field name="used_count" readonly="1"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="Notas">
-                            <field name="notes"/>
-                        </page>
-                    </notebook>
+                    <field name="notes" colspan="2"/>
                 </sheet>
             </form>
         </field>
@@ -50,9 +51,8 @@
         <field name="arch" type="xml">
             <search>
                 <field name="code"/>
-                <filter name="state_active" string="Activos" domain="[('state', '=', 'active')]"/>
-                <filter name="state_draft" string="Borrador" domain="[('state', '=', 'draft')]"/>
-                <filter name="state_expired" string="Vencidos" domain="[('state', '=', 'expired')]"/>
+                <filter name="active_state" string="Activos" domain="[('state','=','active')]"/>
+                <filter name="expired_state" string="Vencidos" domain="[('state','=','expired')]"/>
             </search>
         </field>
     </record>
@@ -61,6 +61,7 @@
         <field name="name">Cupones</field>
         <field name="res_model">pos.coupon</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_pos_coupon_tree"/>
         <field name="search_view_id" ref="view_pos_coupon_search"/>
     </record>
 </odoo>

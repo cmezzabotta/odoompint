@@ -1,5 +1,5 @@
 {
-    "name": "MezzTT POS Benefits",
+    "name": "MezzTT POS Benefits Backend",
     "summary": "Giftcards, Cupones y Puntos para POS",
     "version": "1.0",
     "author": "MezzTT",
@@ -21,5 +21,5 @@
             "mezztt_pos_benefits/static/src/xml/BenefitsButton.xml",
             "mezztt_pos_benefits/static/src/xml/BenefitsPopup.xml",
         ]
-    },
+    }
 }

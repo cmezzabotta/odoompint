@@ -1,1 +1,1 @@
-from . import main
+from . import pos_benefits_controller
