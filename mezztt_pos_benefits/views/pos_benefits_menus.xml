@@ -1,6 +1,5 @@
 <odoo>
     <menuitem id="menu_pos_benefits_root" name="Beneficios" parent="point_of_sale.menu_point_config" sequence="60"/>
-
     <menuitem id="menu_pos_benefits_giftcards" name="Giftcards" parent="menu_pos_benefits_root" action="action_pos_giftcard" sequence="10"/>
     <menuitem id="menu_pos_benefits_coupons" name="Cupones" parent="menu_pos_benefits_root" action="action_pos_coupon" sequence="20"/>
     <menuitem id="menu_pos_benefits_points" name="Puntos" parent="menu_pos_benefits_root" action="action_pos_loyalty_points" sequence="30"/>

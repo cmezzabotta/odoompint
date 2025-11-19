@@ -38,6 +38,54 @@ class PosGiftCard(models.Model):
         string="Órdenes de POS",
     )
     active = fields.Boolean(default=True)
+    expiration_date = fields.Date(string="Fecha de vencimiento")
+    state = fields.Selection(
+        [
+            ("draft", "Borrador"),
+            ("active", "Activa"),
+            ("used", "Utilizada"),
+            ("expired", "Vencida"),
+        ],
+        string="Estado",
+        default="draft",
+        tracking=True,
+    )
+    notes = fields.Text(string="Notas")
+    pos_order_ids = fields.Many2many(
+        comodel_name="pos.order",
+        relation="pos_order_giftcard_rel",
+        column1="giftcard_id",
+        column2="order_id",
+        string="Órdenes de POS",
+        readonly=True,
+    )
+
+    _sql_constraints = [
+        ("pos_giftcard_code_unique", "unique(code)", "El código de la giftcard debe ser único."),
+    ]
+
+    @api.model
+    def create(self, vals):
+        vals.setdefault("balance", vals.get("amount", 0.0))
+        record = super().create(vals)
+        record._update_state()
+        return record
+
+    def write(self, vals):
+        res = super().write(vals)
+        self._update_state()
+        return res
+
+    def _update_state(self):
+        today = fields.Date.today()
+        for record in self:
+            if record.state == "draft" and record.balance > 0:
+                record.state = "active"
+            if record.expiration_date and record.expiration_date < today:
+                record.state = "expired"
+            if record.balance <= 0 and record.state not in ("used", "expired"):
+                record.state = "used"
+            record.active = record.state not in ("used", "expired")
 
     _sql_constraints = [
         ("pos_giftcard_code_unique", "unique(code)", "El código de la giftcard debe ser único."),

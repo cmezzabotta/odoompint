@@ -19,7 +19,7 @@
             "mezztt_pos_benefits/static/src/js/BenefitsButton.js",
             "mezztt_pos_benefits/static/src/js/BenefitsPopup.js",
             "mezztt_pos_benefits/static/src/xml/BenefitsButton.xml",
-            "mezztt_pos_benefits/static/src/xml/BenefitsPopup.xml"
+            "mezztt_pos_benefits/static/src/xml/BenefitsPopup.xml",
         ]
     }
 }
