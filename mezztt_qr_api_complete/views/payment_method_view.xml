@@ -1,0 +1,8 @@
+
+<odoo>
+    <record id="pos_payment_method_mpqr" model="pos.payment.method">
+        <field name="name">QR Mercado Pago</field>
+        <field name="is_cash_count">False</field>
+        <field name="journal_id" eval="False"/>
+    </record>
+</odoo>

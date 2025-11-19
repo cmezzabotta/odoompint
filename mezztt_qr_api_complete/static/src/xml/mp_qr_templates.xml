@@ -1,0 +1,11 @@
+
+<templates id="mp_qr_templates" xml_declaration="False">
+    <t t-name="MPQRPopup">
+        <div class="popup-mpqr">
+            <h2>Escanee el código QR para pagar</h2>
+            <img t-att-src="props.qr_url" class="mpqr-image"/>
+            <div class="mpqr-amount">Amount: <t t-esc="props.amount"/></div>
+            <div class="mpqr-wait">Esperando confirmación...</div>
+        </div>
+    </t>
+</templates>

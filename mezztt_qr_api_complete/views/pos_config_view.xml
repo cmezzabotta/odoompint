@@ -1,0 +1,21 @@
+
+<odoo>
+    <record id="pos_config_mpqr" model="ir.ui.view">
+        <field name="name">pos.config.mpqr</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <group string="Mercado Pago QR Static">
+                    <field name="mp_public_key"/>
+                    <field name="mp_access_token" password="True"/>
+                    <field name="mp_store_id"/>
+                    <field name="mp_external_store_id"/>
+                    <field name="mp_pos_id"/>
+                    <field name="mp_external_pos_id"/>
+                    <field name="mp_static_qr_url"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
