@@ -7,6 +7,7 @@
     "summary": "Terminal Mercado Pago QR estático para el POS estándar",
     "depends": ["point_of_sale"],
     "data": [
+        "data/pos_payment_terminal_data.xml",
         "views/pos_payment_method_views.xml",
         "security/ir.model.access.csv"
     ],

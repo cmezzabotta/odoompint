@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="pos_payment_terminal_mp_qr_static" model="pos.payment.terminal">
+        <field name="name">Mercado Pago QR Estático</field>
+        <field name="identifier">mercado_pago_qr_static</field>
+    </record>
+</odoo>
