@@ -4,9 +4,11 @@
         <field name="model">pos.giftcard</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="name"/>
+                <field name="code"/>
+                <field name="amount"/>
                 <field name="balance"/>
-                <field name="active"/>
+                <field name="expiration_date"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -16,12 +18,48 @@
         <field name="model">pos.giftcard</field>
         <field name="arch" type="xml">
             <form>
-                <sheet><group>
-                    <field name="name"/>
-                    <field name="balance"/>
-                    <field name="active"/>
-                </group></sheet>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="amount"/>
+                            <field name="balance"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="expiration_date"/>
+                            <field name="pos_order_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notas">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
+    </record>
+
+    <record id="view_pos_giftcard_search" model="ir.ui.view">
+        <field name="name">pos.giftcard.search</field>
+        <field name="model">pos.giftcard</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <filter name="state_active" string="Activas" domain="[('state', '=', 'active')]"/>
+                <filter name="state_draft" string="Borrador" domain="[('state', '=', 'draft')]"/>
+                <filter name="state_used" string="Usadas" domain="[('state', '=', 'used')]"/>
+                <filter name="state_expired" string="Vencidas" domain="[('state', '=', 'expired')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_giftcard" model="ir.actions.act_window">
+        <field name="name">Giftcards</field>
+        <field name="res_model">pos.giftcard</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_giftcard_search"/>
+        <field name="context">{"default_state": "draft"}</field>
     </record>
 </odoo>
