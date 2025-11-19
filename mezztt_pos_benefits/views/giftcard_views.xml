@@ -3,10 +3,12 @@
         <field name="name">pos.giftcard.tree</field>
         <field name="model">pos.giftcard</field>
         <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
+            <tree string="Giftcards">
+                <field name="code"/>
+                <field name="amount"/>
                 <field name="balance"/>
-                <field name="active"/>
+                <field name="expiration_date"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -15,13 +17,50 @@
         <field name="name">pos.giftcard.form</field>
         <field name="model">pos.giftcard</field>
         <field name="arch" type="xml">
-            <form>
-                <sheet><group>
-                    <field name="name"/>
-                    <field name="balance"/>
-                    <field name="active"/>
-                </group></sheet>
+            <form string="Giftcard">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,active,used,expired"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="balance" readonly="1"/>
+                            <field name="expiration_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notas">
+                            <field name="notes" colspan="2"/>
+                        </page>
+                        <page string="Órdenes POS">
+                            <field name="pos_order_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
+    </record>
+
+    <record id="view_pos_giftcard_search" model="ir.ui.view">
+        <field name="name">pos.giftcard.search</field>
+        <field name="model">pos.giftcard</field>
+        <field name="arch" type="xml">
+            <search string="Buscar giftcards">
+                <field name="code"/>
+                <filter string="Activas" name="state_active" domain="[('state','=','active')]"/>
+                <filter string="Vencidas" name="state_expired" domain="[('state','=','expired')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_giftcard" model="ir.actions.act_window">
+        <field name="name">Giftcards</field>
+        <field name="res_model">pos.giftcard</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_pos_giftcard_tree"/>
+        <field name="search_view_id" ref="view_pos_giftcard_search"/>
     </record>
 </odoo>
